@@ -43,5 +43,4 @@ class Compound {
         connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
         log.info("Has been initialized.");
     }
-
 }
