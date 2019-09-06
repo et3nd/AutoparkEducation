@@ -22,6 +22,7 @@ nbproject
 
 # Always ignore these directories/files
 target
+out/**
 logs
 *.war
 *.jar
