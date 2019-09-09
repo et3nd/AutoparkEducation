@@ -18,7 +18,7 @@ class Compound {
              PreparedStatement preparedStatement = connection.prepareStatement(writeDataFromFile())) {
             log.info("Connection to the database was successful");
             preparedStatement.execute();
-            log.info("Database has been successfully initialized");
+            log.info("Database has been initialized successfully");
         } catch (SQLException e) {
             log.error("Error: ", e);
         }
@@ -27,7 +27,7 @@ class Compound {
     private String writeDataFromFile() {
         StringBuilder sqlScript = new StringBuilder();
         try {
-            Files.lines(Paths.get("src/resources/db/TableCreationScript.sql"),
+            Files.lines(Paths.get("src/resources/db/table-creation-script.sql"),
                     StandardCharsets.UTF_8).forEach(sqlScript::append);
             return sqlScript.toString();
         } catch (IOException e) {
