@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class Compound {
-    private static final String SCRIPT = "src/resources/db/table_creation_script.sql";
+    private static final String SCRIPT = "src/resources/db/table-creation-script.sql";
     private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/AutoparkEducation/auto park database";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
