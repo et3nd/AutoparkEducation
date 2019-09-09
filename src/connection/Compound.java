@@ -20,8 +20,9 @@ class Compound {
     private static final Logger log = LoggerFactory.getLogger(Compound.class);
 
     void interactWithDatabase() {
+        String script = writeDataFromFile();
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(writeDataFromFile())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.execute();
             log.info("Database has been initialized successfully");
