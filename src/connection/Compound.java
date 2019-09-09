@@ -34,8 +34,7 @@ class Compound {
     private String getInitializationScript() {
         StringBuilder sqlScript = new StringBuilder();
         try {
-            Files.lines(Paths.get(SCRIPT),
-                    StandardCharsets.UTF_8).forEach(sqlScript::append);
+            Files.lines(Paths.get(SCRIPT), StandardCharsets.UTF_8).forEach(sqlScript::append);
             return sqlScript.toString();
         } catch (IOException e) {
             log.error("Error: ", e);
