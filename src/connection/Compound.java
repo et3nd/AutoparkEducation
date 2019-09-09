@@ -19,10 +19,10 @@ class Compound {
     private static final String PASSWORD = "root";
     private static final Logger log = LoggerFactory.getLogger(Compound.class);
 
-    void interactWithDatabase() {
-        String script = writeDataFromFile();
+    void initializeDataBase() {
+        String initializationScript = getInitializationScript();
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(initializationScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.execute();
             log.info("Database has been initialized successfully");
@@ -31,7 +31,7 @@ class Compound {
         }
     }
 
-    private String writeDataFromFile() {
+    private String getInitializationScript() {
         StringBuilder sqlScript = new StringBuilder();
         try {
             Files.lines(Paths.get(SCRIPT),
