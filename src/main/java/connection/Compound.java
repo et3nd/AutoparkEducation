@@ -13,8 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class Compound {
-    private static final String SCRIPT = "src/resources/db/table-creation-script.sql";
-    private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/AutoparkEducation/auto park database";
+    private static final String SCRIPT = "src/main/resources/db/table-creation-script.sql";
+    private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
     private static final Logger log = LoggerFactory.getLogger(Compound.class);
