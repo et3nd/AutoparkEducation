@@ -3,18 +3,18 @@ package connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class Compound {
-    private static final String SCRIPT = "src/resources/db/table-creation-script.sql";
-    private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/AutoparkEducation/auto park database";
+    private static final String SCRIPT = "/db/table-creation-script.sql";
+    private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
     private static final Logger log = LoggerFactory.getLogger(Compound.class);
@@ -34,7 +34,11 @@ class Compound {
     private String getInitializationScript() {
         StringBuilder sqlScript = new StringBuilder();
         try {
-            Files.lines(Paths.get(SCRIPT), StandardCharsets.UTF_8).forEach(sqlScript::append);
+            InputStream stream = Compound.class.getResourceAsStream(SCRIPT);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            while (reader.ready()) {
+                sqlScript.append(reader.readLine());
+            }
             return sqlScript.toString();
         } catch (IOException e) {
             log.error("Error: ", e);
