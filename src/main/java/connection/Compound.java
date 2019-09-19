@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class Compound {
-    private static final String SCRIPT = "src/main/resources/db/table-creation-script.sql";
+    private static final String SCRIPT = "/db/table-creation-script.sql";
     private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
@@ -21,7 +21,7 @@ class Compound {
 
     void initializeDataBase() {
         String initializationScript = getInitializationScript();
-        try (Connection connection = DriverManager.getConnection(URL);
+        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(initializationScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.execute();
