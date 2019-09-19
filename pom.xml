@@ -61,6 +61,14 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/table-creation-script.sql</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 

@@ -1,4 +1,7 @@
-CREATE TABLE "autopark: schema".public_transport
+drop schema if exists autopark;
+create schema autopark;
+
+CREATE TABLE autopark.public_transport
 (
     transport_number INT         NOT NULL,
     bus_brand        VARCHAR(40) NOT NULL,
@@ -6,7 +9,7 @@ CREATE TABLE "autopark: schema".public_transport
     issue_year       INT(4)      NOT NULL,
     PRIMARY KEY (transport_number)
 );
-CREATE TABLE "autopark: schema".routes
+CREATE TABLE autopark.routes
 (
     route_number  INT          NOT NULL,
     start_station VARCHAR(40)  NOT NULL,
@@ -15,7 +18,7 @@ CREATE TABLE "autopark: schema".routes
     distance      INT          NOT NULL,
     PRIMARY KEY (route_number)
 );
-CREATE TABLE "autopark: schema".drivers
+CREATE TABLE autopark.drivers
 (
     license    INT(20)     NOT NULL,
     fio        VARCHAR(40) NOT NULL,
@@ -24,14 +27,14 @@ CREATE TABLE "autopark: schema".drivers
     birth_date DATE        not null,
     PRIMARY KEY (license)
 );
-CREATE TABLE "autopark: schema".schedule
+CREATE TABLE autopark.schedule
 (
     id             INT  NOT NULL,
     departure_time DATE NOT NULL,
     arrival_time   DATE NOT NULL,
     PRIMARY KEY (id)
 );
-CREATE TABLE "autopark: schema".stops
+CREATE TABLE autopark.stops
 (
     stop_name            VARCHAR(30) NOT NULL,
     direction            VARCHAR(50) NOT NULL,

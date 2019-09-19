@@ -3,10 +3,10 @@ package connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ class Compound {
 
     void initializeDataBase() {
         String initializationScript = getInitializationScript();
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(URL);
              PreparedStatement preparedStatement = connection.prepareStatement(initializationScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.execute();
@@ -34,7 +34,11 @@ class Compound {
     private String getInitializationScript() {
         StringBuilder sqlScript = new StringBuilder();
         try {
-            Files.lines(Paths.get(SCRIPT), StandardCharsets.UTF_8).forEach(sqlScript::append);
+            InputStream stream = Compound.class.getResourceAsStream(SCRIPT);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            while (reader.ready()) {
+                sqlScript.append(reader.readLine());
+            }
             return sqlScript.toString();
         } catch (IOException e) {
             log.error("Error: ", e);
