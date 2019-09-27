@@ -140,6 +140,30 @@
                     <include>db/get-route-script.sql</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/add-schedule-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/update-schedule-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/remove-schedule-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/get-schedule-script.sql</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 

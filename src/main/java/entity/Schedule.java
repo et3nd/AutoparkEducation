@@ -1,11 +1,11 @@
 package entity;
 
-import java.sql.Date;
+import java.sql.Time;
 
 public class Schedule {
     private int id;
-    private Date departureTime;
-    private Date arrivalTime;
+    private Time departureTime;
+    private Time arrivalTime;
 
     public int getId() {
         return id;
@@ -15,19 +15,19 @@ public class Schedule {
         this.id = id;
     }
 
-    public Date getDepartureTime() {
+    public Time getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(Time departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Date getArrivalTime() {
+    public Time getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Date arrivalTime) {
+    public void setArrivalTime(Time arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 }
