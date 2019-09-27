@@ -1,11 +1,11 @@
 package entity;
 
-import java.sql.Date;
+import java.sql.Time;
 
 public class Stops {
     private String stopName;
     private String direction;
-    private Date arrivalTimeOnStop;
+    private Time arrivalTimeOnStop;
 
     public String getStopName() {
         return stopName;
@@ -23,11 +23,11 @@ public class Stops {
         this.direction = direction;
     }
 
-    public Date getArrivalTimeOnStop() {
+    public Time getArrivalTimeOnStop() {
         return arrivalTimeOnStop;
     }
 
-    public void setArrivalTimeOnStop(Date arrivalTimeOnStop) {
+    public void setArrivalTimeOnStop(Time arrivalTimeOnStop) {
         this.arrivalTimeOnStop = arrivalTimeOnStop;
     }
 }

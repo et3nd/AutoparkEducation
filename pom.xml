@@ -164,6 +164,30 @@
                     <include>db/get-schedule-script.sql</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/add-stop-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/update-stop-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/remove-stop-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/get-stop-script.sql</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 

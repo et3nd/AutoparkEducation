@@ -4,4 +4,4 @@ INSERT INTO AUTOPARK.ROUTES
  END_STATION,
  STOPS,
  DISTANCE)
-VALUES (?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?);

@@ -18,11 +18,11 @@ public class StopsService {
         stopsDao.updateStop(stop);
     }
 
-    public void removeStop(int id) {
+    public void removeStop(String id) {
         stopsDao.removeStop(id);
     }
 
-    public void detStop(int id) {
+    public void detStop(String id) {
         stopsDao.getStop(id);
     }
 }
