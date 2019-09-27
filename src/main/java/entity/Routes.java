@@ -46,15 +46,4 @@ public class Routes {
     public void setDistance(int distance) {
         this.distance = distance;
     }
-
-    @Override
-    public String toString() {
-        return "Routes{" +
-                "routeNumber=" + routeNumber +
-                ", startStation='" + startStation + '\'' +
-                ", endStation='" + endStation + '\'' +
-                ", stops='" + stops + '\'' +
-                ", distance=" + distance +
-                '}';
-    }
 }

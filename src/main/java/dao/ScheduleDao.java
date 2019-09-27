@@ -16,7 +16,7 @@ public class ScheduleDao extends DAO {
 
     }
 
-    public Schedule getSchedule(int id) {
-        return null;
+    public void getSchedule(int id) {
+
     }
 }

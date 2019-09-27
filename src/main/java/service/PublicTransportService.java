@@ -22,7 +22,7 @@ public class PublicTransportService {
         publicTransportDao.removePublicTransport(id);
     }
 
-    public PublicTransport getPublicTransport(int id) {
-        return publicTransportDao.getPublicTransport(id);
+    public void getPublicTransport(int id) {
+        publicTransportDao.getPublicTransport(id);
     }
 }

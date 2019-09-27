@@ -16,7 +16,7 @@ public class StopsDao extends DAO {
 
     }
 
-    public Stops getStop(int id) {
-        return null;
+    public void getStop(int id) {
+
     }
 }
