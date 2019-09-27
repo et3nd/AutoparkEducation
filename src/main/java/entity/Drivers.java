@@ -1,11 +1,14 @@
 package entity;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 public class Drivers {
     private int license;
     private String fio;
     private int salary;
     private String address;
-    private String birthDate;
+    private Date birthDate;
 
     public int getLicense() {
         return license;
@@ -39,11 +42,11 @@ public class Drivers {
         this.address = address;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 }

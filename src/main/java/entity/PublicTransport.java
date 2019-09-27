@@ -37,14 +37,4 @@ public class PublicTransport {
     public void setIssueYear(int issueYear) {
         this.issueYear = issueYear;
     }
-
-    @Override
-    public String toString() {
-        return "PublicTransport{" +
-                "transportNumber=" + transportNumber +
-                ", busBrand='" + busBrand + '\'' +
-                ", capacity=" + capacity +
-                ", issueYear=" + issueYear +
-                '}';
-    }
 }

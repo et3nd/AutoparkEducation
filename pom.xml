@@ -92,6 +92,30 @@
                     <include>db/get-driver-script.sql</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/add-transport-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/update-transport-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/remove-transport-script.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>db/get-transport-script.sql</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 

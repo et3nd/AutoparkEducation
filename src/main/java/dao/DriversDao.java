@@ -19,9 +19,9 @@ public class DriversDao extends DAO {
             preparedStatement.setString(2, driver.getFio());
             preparedStatement.setInt(3, driver.getSalary());
             preparedStatement.setString(4, driver.getAddress());
-            preparedStatement.setString(5, driver.getBirthDate());
+            preparedStatement.setDate(5, driver.getBirthDate());
             preparedStatement.execute();
-            log.info("Successful");
+            log.info("Driver add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
         }
@@ -35,7 +35,7 @@ public class DriversDao extends DAO {
             log.info("Connection to the database was successful");
             preparedStatement.setString(1, driver.getFio());
             preparedStatement.execute();
-            log.info("Successful");
+            log.info("Driver update was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
         }
@@ -49,7 +49,7 @@ public class DriversDao extends DAO {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
-            log.info("Successful");
+            log.info("Driver remove was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
         }
@@ -66,7 +66,7 @@ public class DriversDao extends DAO {
             while (resultSet.next()) {
                 System.out.println(resultSet.getString("address"));
             }
-            log.info("Successful");
+            log.info("Driver read was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
         }

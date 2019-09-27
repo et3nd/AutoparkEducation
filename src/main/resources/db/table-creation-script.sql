@@ -21,7 +21,7 @@ CREATE TABLE autopark.drivers
     fio        VARCHAR(40) NOT NULL,
     salary     INT         NOT NULL,
     address    VARCHAR(60) NOT NULL,
-    birth_date VARCHAR(100)not null,
+    birth_date date        NOT NULL,
     PRIMARY KEY (license)
 );
 CREATE TABLE autopark.schedule
