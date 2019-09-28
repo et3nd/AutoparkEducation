@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class ScheduleDao extends DAO {
+public class ScheduleDao extends EntityDao {
     private static final Logger log = LoggerFactory.getLogger(ScheduleDao.class);
+    private static final String ADD_SCHEDULE_SCRIPT = "/db/add-schedule-script.sql";
+    private static final String UPDATE_SCHEDULE_SCRIPT = "/db/update-schedule-script.sql";
+    private static final String REMOVE_SCHEDULE_SCRIPT = "/db/remove-schedule-script.sql";
+    private static final String GET_SCHEDULE_SCRIPT = "/db/get-schedule-script.sql";
 
     public void addSchedule(Schedule schedule) {
-        final String script = "/db/add-schedule-script.sql";
-        String addScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(script));
+        String addScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(ADD_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
             log.info("Connection to the database was successful");
@@ -26,8 +29,7 @@ public class ScheduleDao extends DAO {
     }
 
     public void updateSchedule(Schedule schedule) {
-        final String script = "/db/update-schedule-script.sql";
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(UPDATE_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -40,8 +42,7 @@ public class ScheduleDao extends DAO {
     }
 
     public void removeSchedule(int id) {
-        final String script = "/db/remove-schedule-script.sql";
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(REMOVE_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -53,20 +54,26 @@ public class ScheduleDao extends DAO {
         }
     }
 
-    public void getSchedule(int id) {
-        final String script = "/db/get-schedule-script.sql";
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(script));
+    public Schedule getSchedule(int id) {
+        Schedule schedule = new Schedule();
+        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(GET_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println(resultSet.getInt("id"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    schedule.setId(resultSet.getInt("id"));
+                    schedule.setDepartureTime(Time.valueOf(String.valueOf(resultSet.getTime("departure_time"))));
+                    schedule.setArrivalTime(Time.valueOf(String.valueOf(resultSet.getTime("arrival_time"))));
+                    log.info("Read: " + schedule);
+                }
+                log.info("Schedule read was successful");
             }
-            log.info("Schedule read was successful");
+            return schedule;
         } catch (SQLException e) {
             log.error("Error: ", e);
+            return schedule;
         }
     }
 }

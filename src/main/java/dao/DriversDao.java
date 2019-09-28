@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class DriversDao extends DAO {
+public class DriversDao extends EntityDao {
     private static final Logger log = LoggerFactory.getLogger(DriversDao.class);
+    private static final String ADD_DRIVER_SCRIPT = "/db/add-driver-script.sql";
+    private static final String UPDATE_DRIVER_SCRIPT = "/db/update-driver-script.sql";
+    private static final String REMOVE_DRIVER_SCRIPT = "/db/remove-driver-script.sql";
+    private static final String GET_DRIVER_SCRIPT = "/db/get-driver-script.sql";
 
     public void addDriver(Drivers driver) {
-        final String script = "/db/add-driver-script.sql";
-        String addScript = getInitializationScript(DriversDao.class.getResourceAsStream(script));
+        String addScript = getInitializationScript(DriversDao.class.getResourceAsStream(ADD_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
             log.info("Connection to the database was successful");
@@ -28,8 +31,7 @@ public class DriversDao extends DAO {
     }
 
     public void updateDriver(Drivers driver) {
-        final String script = "/db/update-driver-script.sql";
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(UPDATE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -42,8 +44,7 @@ public class DriversDao extends DAO {
     }
 
     public void removeDriver(int id) {
-        final String script = "/db/remove-driver-script.sql";
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -55,20 +56,28 @@ public class DriversDao extends DAO {
         }
     }
 
-    public void getDriver(int id) {
-        final String script = "/db/get-driver-script.sql";
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(script));
+    public Drivers getDriver(int id) {
+        Drivers driver = new Drivers();
+        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("address"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    driver.setAddress(resultSet.getString("address"));
+                    driver.setFio(resultSet.getString("fio"));
+                    driver.setSalary(resultSet.getInt("salary"));
+                    driver.setLicense(resultSet.getInt("license"));
+                    driver.setBirthDate(Date.valueOf(String.valueOf(resultSet.getDate("birth_date"))));
+                    log.info("Read: " + driver.toString());
+                }
+                log.info("Driver read was successful");
             }
-            log.info("Driver read was successful");
+            return driver;
         } catch (SQLException e) {
             log.error("Error: ", e);
+            return driver;
         }
     }
 }

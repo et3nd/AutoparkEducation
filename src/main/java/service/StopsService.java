@@ -22,7 +22,7 @@ public class StopsService {
         stopsDao.removeStop(id);
     }
 
-    public void detStop(String id) {
-        stopsDao.getStop(id);
+    public Stops detStop(String id) {
+        return stopsDao.getStop(id);
     }
 }

@@ -30,4 +30,11 @@ public class Stops {
     public void setArrivalTimeOnStop(Time arrivalTimeOnStop) {
         this.arrivalTimeOnStop = arrivalTimeOnStop;
     }
+
+    @Override
+    public String toString() {
+        return stopName + " "
+                + direction + " "
+                + arrivalTimeOnStop;
+    }
 }

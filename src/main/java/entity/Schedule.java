@@ -30,4 +30,11 @@ public class Schedule {
     public void setArrivalTime(Time arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+
+    @Override
+    public String toString() {
+        return id + " "
+                + departureTime + " "
+                + arrivalTime;
+    }
 }

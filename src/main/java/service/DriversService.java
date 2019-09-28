@@ -22,7 +22,7 @@ public class DriversService {
         driversDao.removeDriver(id);
     }
 
-    public void getDriver(int id) {
-        driversDao.getDriver(id);
+    public Drivers getDriver(int id) {
+        return driversDao.getDriver(id);
     }
 }

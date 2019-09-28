@@ -22,7 +22,7 @@ public class RoutesService {
         routesDao.removeRoute(id);
     }
 
-    public void getRoute(int id) {
-        routesDao.getRoute(id);
+    public Routes getRoute(int id) {
+        return routesDao.getRoute(id);
     }
 }

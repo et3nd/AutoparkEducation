@@ -46,4 +46,13 @@ public class Routes {
     public void setDistance(int distance) {
         this.distance = distance;
     }
+
+    @Override
+    public String toString() {
+        return routeNumber + " "
+                + startStation + " "
+                + endStation + " "
+                + stops + " "
+                + distance;
+    }
 }

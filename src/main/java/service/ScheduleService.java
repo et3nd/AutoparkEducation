@@ -22,7 +22,7 @@ public class ScheduleService {
         scheduleDao.removeSchedule(id);
     }
 
-    public void getSchedule(int id) {
-        scheduleDao.getSchedule(id);
+    public Schedule getSchedule(int id) {
+        return scheduleDao.getSchedule(id);
     }
 }

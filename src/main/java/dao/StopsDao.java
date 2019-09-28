@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class StopsDao extends DAO {
+public class StopsDao extends EntityDao {
     private static final Logger log = LoggerFactory.getLogger(StopsDao.class);
+    private static final String ADD_STOP_SCRIPT = "/db/add-stop-script.sql";
+    private static final String UPDATE_STOP_SCRIPT = "/db/update-stop-script.sql";
+    private static final String REMOVE_STOP_SCRIPT = "/db/remove-stop-script.sql";
+    private static final String GET_STOP_SCRIPT = "/db/get-stop-script.sql";
 
     public void addStop(Stops stop) {
-        final String script = "/db/add-stop-script.sql";
-        String addScript = getInitializationScript(StopsDao.class.getResourceAsStream(script));
+        String addScript = getInitializationScript(StopsDao.class.getResourceAsStream(ADD_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
             log.info("Connection to the database was successful");
@@ -26,8 +29,7 @@ public class StopsDao extends DAO {
     }
 
     public void updateStop(Stops stop) {
-        final String script = "/db/update-stop-script.sql";
-        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(UPDATE_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -40,8 +42,7 @@ public class StopsDao extends DAO {
     }
 
     public void removeStop(String id) {
-        final String script = "/db/remove-stop-script.sql";
-        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(script));
+        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(REMOVE_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
@@ -53,20 +54,26 @@ public class StopsDao extends DAO {
         }
     }
 
-    public void getStop(String id) {
-        final String script = "/db/get-stop-script.sql";
-        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(script));
+    public Stops getStop(String id) {
+        Stops stop = new Stops();
+        String updateScript = getInitializationScript(StopsDao.class.getResourceAsStream(GET_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
             log.info("Connection to the database was successful");
             preparedStatement.setString(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("direction"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    stop.setStopName(resultSet.getString("stop_name"));
+                    stop.setDirection(resultSet.getString("direction"));
+                    stop.setArrivalTimeOnStop(Time.valueOf(String.valueOf(resultSet.getTime("arrival_time_on_stop"))));
+                    log.info("Read: " + stop);
+                }
+                log.info("Stop read was successful");
             }
-            log.info("Stop read was successful");
+            return stop;
         } catch (SQLException e) {
             log.error("Error: ", e);
+            return stop;
         }
     }
 }

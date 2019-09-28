@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-abstract class DAO {
-    private static final Logger log = LoggerFactory.getLogger(DAO.class);
+abstract class EntityDao {
+    private static final Logger log = LoggerFactory.getLogger(EntityDao.class);
     static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
     static final String LOGIN = "root";
     static final String PASSWORD = "root";
