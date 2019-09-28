@@ -23,7 +23,10 @@ nbproject
 # Always ignore these directories/files
 target
 out/**
-logs
 *.war
 *.jar
 libs/**
+/logs/
+/autopark-database.mv.db
+/autopark-database.trace.db
+/autopark-database/

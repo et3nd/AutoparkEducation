@@ -1,6 +1,3 @@
-drop schema if exists autopark;
-create schema autopark;
-
 CREATE TABLE autopark.public_transport
 (
     transport_number INT         NOT NULL,
@@ -24,7 +21,7 @@ CREATE TABLE autopark.drivers
     fio        VARCHAR(40) NOT NULL,
     salary     INT         NOT NULL,
     address    VARCHAR(60) NOT NULL,
-    birth_date DATE        not null,
+    birth_date date        NOT NULL,
     PRIMARY KEY (license)
 );
 CREATE TABLE autopark.schedule
