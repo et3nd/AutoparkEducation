@@ -13,7 +13,7 @@ public class RoutesDao extends EntityDao {
     private static final String REMOVE_ROUTE_SCRIPT = "/db/remove-route-script.sql";
     private static final String GET_ROUTE_SCRIPT = "/db/get-route-script.sql";
 
-    public void addRoute(Routes route) {
+    public void addRoute(Routes route) throws SQLException {
         String script = getInitializationScript(RoutesDao.class.getResourceAsStream(ADD_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -27,6 +27,7 @@ public class RoutesDao extends EntityDao {
             log.info("Route add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException();
         }
     }
 
@@ -43,12 +44,12 @@ public class RoutesDao extends EntityDao {
         }
     }
 
-    public void removeRoute(int id) {
+    public void removeRoute(int routeNumber) {
         String script = getInitializationScript(RoutesDao.class.getResourceAsStream(REMOVE_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, routeNumber);
             preparedStatement.execute();
             log.info("Route remove was successful");
         } catch (SQLException e) {
@@ -56,13 +57,13 @@ public class RoutesDao extends EntityDao {
         }
     }
 
-    public Routes getRoute(int id) {
+    public Routes getRoute(int routeNumber) {
         Routes route = new Routes();
         String script = getInitializationScript(RoutesDao.class.getResourceAsStream(GET_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, routeNumber);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     route.setRouteNumber(resultSet.getInt("route_number"));

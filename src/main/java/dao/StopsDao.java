@@ -13,7 +13,7 @@ public class StopsDao extends EntityDao {
     private static final String REMOVE_STOP_SCRIPT = "/db/remove-stop-script.sql";
     private static final String GET_STOP_SCRIPT = "/db/get-stop-script.sql";
 
-    public void addStop(Stops stop) {
+    public void addStop(Stops stop) throws SQLException {
         String script = getInitializationScript(StopsDao.class.getResourceAsStream(ADD_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -25,6 +25,7 @@ public class StopsDao extends EntityDao {
             log.info("Stop add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException();
         }
     }
 
@@ -41,12 +42,12 @@ public class StopsDao extends EntityDao {
         }
     }
 
-    public void removeStop(String id) {
+    public void removeStop(String stopName) {
         String script = getInitializationScript(StopsDao.class.getResourceAsStream(REMOVE_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setString(1, id);
+            preparedStatement.setString(1, stopName);
             preparedStatement.execute();
             log.info("Stop remove was successful");
         } catch (SQLException e) {
@@ -54,13 +55,13 @@ public class StopsDao extends EntityDao {
         }
     }
 
-    public Stops getStop(String id) {
+    public Stops getStop(String stopName) {
         Stops stop = new Stops();
         String script = getInitializationScript(StopsDao.class.getResourceAsStream(GET_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setString(1, id);
+            preparedStatement.setString(1, stopName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     stop.setStopName(resultSet.getString("stop_name"));

@@ -13,7 +13,7 @@ public class ScheduleDao extends EntityDao {
     private static final String REMOVE_SCHEDULE_SCRIPT = "/db/remove-schedule-script.sql";
     private static final String GET_SCHEDULE_SCRIPT = "/db/get-schedule-script.sql";
 
-    public void addSchedule(Schedule schedule) {
+    public void addSchedule(Schedule schedule) throws SQLException {
         String script = getInitializationScript(ScheduleDao.class.getResourceAsStream(ADD_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -25,6 +25,7 @@ public class ScheduleDao extends EntityDao {
             log.info("Schedule add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException();
         }
     }
 

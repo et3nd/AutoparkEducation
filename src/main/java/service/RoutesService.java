@@ -2,8 +2,13 @@ package service;
 
 import dao.RoutesDao;
 import entity.Routes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
 
 public class RoutesService {
+    private static final Logger log = LoggerFactory.getLogger(RoutesService.class);
     private RoutesDao routesDao;
 
     public void setRoutesDao(RoutesDao routesDao) {
@@ -11,7 +16,11 @@ public class RoutesService {
     }
 
     public void addRoute(Routes route) {
-        routesDao.addRoute(route);
+        try {
+            routesDao.addRoute(route);
+        } catch (SQLException e) {
+            log.error("This value of route number is used");
+        }
     }
 
     public void updateRoute(Routes route) {

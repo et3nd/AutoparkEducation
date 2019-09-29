@@ -13,7 +13,7 @@ public class DriversDao extends EntityDao {
     private static final String REMOVE_DRIVER_SCRIPT = "/db/remove-driver-script.sql";
     private static final String GET_DRIVER_SCRIPT = "/db/get-driver-script.sql";
 
-    public void addDriver(Drivers driver) {
+    public void addDriver(Drivers driver) throws SQLException {
         String script = getInitializationScript(DriversDao.class.getResourceAsStream(ADD_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -27,6 +27,7 @@ public class DriversDao extends EntityDao {
             log.info("Driver add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException();
         }
     }
 
@@ -43,12 +44,12 @@ public class DriversDao extends EntityDao {
         }
     }
 
-    public void removeDriver(int id) {
+    public void removeDriver(int license) {
         String script = getInitializationScript(DriversDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, license);
             preparedStatement.execute();
             log.info("Driver remove was successful");
         } catch (SQLException e) {
@@ -56,13 +57,13 @@ public class DriversDao extends EntityDao {
         }
     }
 
-    public Drivers getDriver(int id) {
+    public Drivers getDriver(int license) {
         Drivers driver = new Drivers();
         String script = getInitializationScript(DriversDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, license);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     driver.setAddress(resultSet.getString("address"));
