@@ -14,9 +14,9 @@ public class ScheduleDao extends EntityDao {
     private static final String GET_SCHEDULE_SCRIPT = "/db/get-schedule-script.sql";
 
     public void addSchedule(Schedule schedule) {
-        String addScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(ADD_SCHEDULE_SCRIPT));
+        String script = getInitializationScript(ScheduleDao.class.getResourceAsStream(ADD_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, schedule.getId());
             preparedStatement.setTime(2, schedule.getDepartureTime());
@@ -29,9 +29,9 @@ public class ScheduleDao extends EntityDao {
     }
 
     public void updateSchedule(Schedule schedule) {
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(UPDATE_SCHEDULE_SCRIPT));
+        String script = getInitializationScript(ScheduleDao.class.getResourceAsStream(UPDATE_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setTime(1, schedule.getArrivalTime());
             preparedStatement.execute();
@@ -42,9 +42,9 @@ public class ScheduleDao extends EntityDao {
     }
 
     public void removeSchedule(int id) {
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(REMOVE_SCHEDULE_SCRIPT));
+        String script = getInitializationScript(ScheduleDao.class.getResourceAsStream(REMOVE_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
@@ -56,9 +56,9 @@ public class ScheduleDao extends EntityDao {
 
     public Schedule getSchedule(int id) {
         Schedule schedule = new Schedule();
-        String updateScript = getInitializationScript(ScheduleDao.class.getResourceAsStream(GET_SCHEDULE_SCRIPT));
+        String script = getInitializationScript(ScheduleDao.class.getResourceAsStream(GET_SCHEDULE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

@@ -14,9 +14,9 @@ public class DriversDao extends EntityDao {
     private static final String GET_DRIVER_SCRIPT = "/db/get-driver-script.sql";
 
     public void addDriver(Drivers driver) {
-        String addScript = getInitializationScript(DriversDao.class.getResourceAsStream(ADD_DRIVER_SCRIPT));
+        String script = getInitializationScript(DriversDao.class.getResourceAsStream(ADD_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, driver.getLicense());
             preparedStatement.setString(2, driver.getFio());
@@ -31,9 +31,9 @@ public class DriversDao extends EntityDao {
     }
 
     public void updateDriver(Drivers driver) {
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(UPDATE_DRIVER_SCRIPT));
+        String script = getInitializationScript(DriversDao.class.getResourceAsStream(UPDATE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setString(1, driver.getFio());
             preparedStatement.execute();
@@ -44,9 +44,9 @@ public class DriversDao extends EntityDao {
     }
 
     public void removeDriver(int id) {
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
+        String script = getInitializationScript(DriversDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
@@ -58,9 +58,9 @@ public class DriversDao extends EntityDao {
 
     public Drivers getDriver(int id) {
         Drivers driver = new Drivers();
-        String updateScript = getInitializationScript(DriversDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
+        String script = getInitializationScript(DriversDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

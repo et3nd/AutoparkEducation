@@ -14,9 +14,9 @@ public class PublicTransportDao extends EntityDao {
     private static final String GET_TRANSPORT_SCRIPT = "/db/get-transport-script.sql";
 
     public void addPublicTransport(PublicTransport transport) {
-        String addScript = getInitializationScript(PublicTransportDao.class.getResourceAsStream(ADD_TRANSPORT_SCRIPT));
+        String script = getInitializationScript(PublicTransportDao.class.getResourceAsStream(ADD_TRANSPORT_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(addScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, transport.getTransportNumber());
             preparedStatement.setString(2, transport.getBusBrand());
@@ -30,9 +30,9 @@ public class PublicTransportDao extends EntityDao {
     }
 
     public void updatePublicTransport(PublicTransport transport) {
-        String updateScript = getInitializationScript(PublicTransportDao.class.getResourceAsStream(UPDATE_TRANSPORT_SCRIPT));
+        String script = getInitializationScript(PublicTransportDao.class.getResourceAsStream(UPDATE_TRANSPORT_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, transport.getCapacity());
             preparedStatement.execute();
@@ -43,9 +43,9 @@ public class PublicTransportDao extends EntityDao {
     }
 
     public void removePublicTransport(int id) {
-        String updateScript = getInitializationScript(PublicTransportDao.class.getResourceAsStream(REMOVE_TRANSPORT_SCRIPT));
+        String script = getInitializationScript(PublicTransportDao.class.getResourceAsStream(REMOVE_TRANSPORT_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
@@ -57,9 +57,9 @@ public class PublicTransportDao extends EntityDao {
 
     public PublicTransport getPublicTransport(int id) {
         PublicTransport transport = new PublicTransport();
-        String updateScript = getInitializationScript(PublicTransportDao.class.getResourceAsStream(GET_TRANSPORT_SCRIPT));
+        String script = getInitializationScript(PublicTransportDao.class.getResourceAsStream(GET_TRANSPORT_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(updateScript)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
