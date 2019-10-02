@@ -3,19 +3,24 @@ package service;
 import dao.DriversDao;
 import entity.Drivers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class DriversServiceTest {
-    private DriversDao driverDao = mock(DriversDao.class);
-    private DriversService service = new DriversService();
+
+    @Mock
+    DriversDao driverDao;
+    private DriversService driverService = new DriversService();
 
     @Test
     void getDriverTest() {
-        service.setDriversDao(driverDao);
+        driverService.setDriversDao(driverDao);
         when(driverDao.getDriver(111111)).thenReturn(new Drivers());
-        assertEquals(new Drivers().toString(), service.getDriver(111111).toString());
+        assertEquals(new Drivers().toString(), driverService.getDriver(111111).toString());
     }
 }
