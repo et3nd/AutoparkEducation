@@ -1,18 +1,18 @@
 CREATE TABLE autopark.public_transport
 (
-    transport_number INT         NOT NULL,
+    transport_number INT,
     bus_brand        VARCHAR(40) NOT NULL,
     capacity         INT         NOT NULL,
-    issue_year       INT(4)      NOT NULL,
+    issue_year       INT(4),
     PRIMARY KEY (transport_number)
 );
 CREATE TABLE autopark.routes
 (
-    route_number  INT          NOT NULL,
+    route_number  INT,
     start_station VARCHAR(40)  NOT NULL,
     end_station   VARCHAR(40)  NOT NULL,
     stops         VARCHAR(200) NOT NULL,
-    distance      INT          NOT NULL,
+    distance      INT,
     PRIMARY KEY (route_number)
 );
 CREATE TABLE autopark.drivers
@@ -26,7 +26,7 @@ CREATE TABLE autopark.drivers
 );
 CREATE TABLE autopark.schedule
 (
-    id             INT  NOT NULL,
+    id             INT,
     departure_time DATE NOT NULL,
     arrival_time   DATE NOT NULL,
     PRIMARY KEY (id)

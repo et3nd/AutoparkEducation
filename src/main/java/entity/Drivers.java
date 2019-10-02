@@ -1,13 +1,14 @@
 package entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Drivers {
-    private int license;
-    private String fio;
-    private int salary;
-    private String address;
-    private Date birthDate;
+    private int license = 111111;
+    private String fio = "default";
+    private int salary = 20000;
+    private String address = "default";
+    private Date birthDate = Date.valueOf(LocalDate.of(1900, 1, 1));
 
     public int getLicense() {
         return license;

@@ -27,11 +27,11 @@ public class StopsService {
         stopsDao.updateStop(stop);
     }
 
-    public void removeStop(String id) {
-        stopsDao.removeStop(id);
+    public void removeStop(String stopName) {
+        stopsDao.removeStop(stopName);
     }
 
-    public Stops detStop(String id) {
-        return stopsDao.getStop(id);
+    public Stops getStop(String stopName) {
+        return stopsDao.getStop(stopName);
     }
 }

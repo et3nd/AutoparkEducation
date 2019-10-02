@@ -27,11 +27,11 @@ public class RoutesService {
         routesDao.updateRoute(route);
     }
 
-    public void removeRoute(int id) {
-        routesDao.removeRoute(id);
+    public void removeRoute(int routeNumber) {
+        routesDao.removeRoute(routeNumber);
     }
 
-    public Routes getRoute(int id) {
-        return routesDao.getRoute(id);
+    public Routes getRoute(int routeNumber) {
+        return routesDao.getRoute(routeNumber);
     }
 }

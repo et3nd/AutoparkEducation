@@ -27,11 +27,11 @@ public class DriversService {
         driversDao.updateDriver(driver);
     }
 
-    public void removeDriver(int id) {
-        driversDao.removeDriver(id);
+    public void removeDriver(int license) {
+        driversDao.removeDriver(license);
     }
 
-    public Drivers getDriver(int id) {
-        return driversDao.getDriver(id);
+    public Drivers getDriver(int license) {
+        return driversDao.getDriver(license);
     }
 }

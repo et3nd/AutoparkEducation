@@ -2,9 +2,9 @@ package entity;
 
 public class Routes {
     private int routeNumber;
-    private String startStation;
-    private String endStation;
-    private String stops;
+    private String startStation = "default";
+    private String endStation = "default";
+    private String stops = "default";
     private int distance;
 
     public int getRouteNumber() {

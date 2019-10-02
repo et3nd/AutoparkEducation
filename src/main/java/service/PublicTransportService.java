@@ -27,11 +27,11 @@ public class PublicTransportService {
         publicTransportDao.updatePublicTransport(transport);
     }
 
-    public void removePublicTransport(int id) {
-        publicTransportDao.removePublicTransport(id);
+    public void removePublicTransport(int transportNumber) {
+        publicTransportDao.removePublicTransport(transportNumber);
     }
 
-    public PublicTransport getPublicTransport(int id) {
-        return publicTransportDao.getPublicTransport(id);
+    public PublicTransport getPublicTransport(int transportNumber) {
+        return publicTransportDao.getPublicTransport(transportNumber);
     }
 }

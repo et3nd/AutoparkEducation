@@ -1,11 +1,12 @@
 package entity;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class Stops {
-    private String stopName;
-    private String direction;
-    private Time arrivalTimeOnStop;
+    private String stopName = "default";
+    private String direction = "default";
+    private Time arrivalTimeOnStop = Time.valueOf(LocalTime.of(0, 0, 0));
 
     public String getStopName() {
         return stopName;

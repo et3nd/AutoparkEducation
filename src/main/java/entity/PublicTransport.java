@@ -2,8 +2,8 @@ package entity;
 
 public class PublicTransport {
     private int transportNumber;
-    private String busBrand;
-    private int capacity;
+    private String busBrand = "default";
+    private int capacity = 20;
     private int issueYear;
 
     public int getTransportNumber() {
