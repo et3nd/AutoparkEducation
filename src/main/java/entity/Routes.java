@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Objects;
+
 public class Routes {
     private int routeNumber;
     private String startStation = "default";
@@ -54,5 +56,22 @@ public class Routes {
                 + endStation + " "
                 + stops + " "
                 + distance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Routes)) return false;
+        Routes routes = (Routes) o;
+        return routeNumber == routes.routeNumber &&
+                distance == routes.distance &&
+                Objects.equals(startStation, routes.startStation) &&
+                Objects.equals(endStation, routes.endStation) &&
+                Objects.equals(stops, routes.stops);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(routeNumber, startStation, endStation, stops, distance);
     }
 }

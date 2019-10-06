@@ -2,6 +2,7 @@ package entity;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Drivers {
     private int license = 111111;
@@ -57,5 +58,22 @@ public class Drivers {
                 + salary + " "
                 + address + " "
                 + birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Drivers)) return false;
+        Drivers drivers = (Drivers) o;
+        return license == drivers.license &&
+                salary == drivers.salary &&
+                Objects.equals(fio, drivers.fio) &&
+                Objects.equals(address, drivers.address) &&
+                Objects.equals(birthDate, drivers.birthDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(license, fio, salary, address, birthDate);
     }
 }

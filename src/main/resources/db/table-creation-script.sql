@@ -27,14 +27,14 @@ CREATE TABLE autopark.drivers
 CREATE TABLE autopark.schedule
 (
     id             INT,
-    departure_time DATE NOT NULL,
-    arrival_time   DATE NOT NULL,
+    departure_time TIME NOT NULL,
+    arrival_time   TIME NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE autopark.stops
 (
     stop_name            VARCHAR(30) NOT NULL,
     direction            VARCHAR(50) NOT NULL,
-    arrival_time_on_stop DATE        NOT NULL,
+    arrival_time_on_stop TIME        NOT NULL,
     PRIMARY KEY (stop_name)
 );

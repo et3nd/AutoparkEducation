@@ -2,6 +2,7 @@ package entity;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Stops {
     private String stopName = "default";
@@ -37,5 +38,20 @@ public class Stops {
         return stopName + " "
                 + direction + " "
                 + arrivalTimeOnStop;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Stops)) return false;
+        Stops stops = (Stops) o;
+        return Objects.equals(stopName, stops.stopName) &&
+                Objects.equals(direction, stops.direction) &&
+                Objects.equals(arrivalTimeOnStop, stops.arrivalTimeOnStop);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stopName, direction, arrivalTimeOnStop);
     }
 }

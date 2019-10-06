@@ -2,6 +2,7 @@ package entity;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Schedule {
     private int id;
@@ -37,5 +38,20 @@ public class Schedule {
         return id + " "
                 + departureTime + " "
                 + arrivalTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Schedule)) return false;
+        Schedule schedule = (Schedule) o;
+        return id == schedule.id &&
+                Objects.equals(departureTime, schedule.departureTime) &&
+                Objects.equals(arrivalTime, schedule.arrivalTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, departureTime, arrivalTime);
     }
 }

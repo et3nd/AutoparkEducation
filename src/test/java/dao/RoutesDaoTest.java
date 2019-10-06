@@ -2,6 +2,7 @@ package dao;
 
 import entity.Routes;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -11,25 +12,53 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RoutesDaoTest {
-    private RoutesDao routeDao = new RoutesDao();
+    private RoutesDao routesDao = new RoutesDao();
+    private Routes route = new Routes();
+
+    @BeforeEach
+    void addRoute() throws SQLException {
+        route.setRouteNumber(1);
+        route.setStops("Stops");
+        route.setDistance(10);
+        route.setStartStation("Start");
+        route.setEndStation("End");
+        routesDao.addRoute(route);
+    }
 
     @Test
-    void routeTest() {
-        Executable testInsert = () -> {
-            Routes route = new Routes();
-            routeDao.addRoute(route);
-            assertEquals(route.toString(), routeDao.getRoute(0).toString());
-            route.setRouteNumber(1);
-            routeDao.addRoute(route);
-            assertEquals(route.toString(), routeDao.getRoute(1).toString());
-            routeDao.addRoute(route);
-        };
+    void getRoute() {
+        assertEquals(route, routesDao.getRoute(1));
+        assertEquals(new Routes(), routesDao.getRoute(11));
+    }
+
+    @Test
+    void addRouteWithDefaultValues() throws SQLException {
+        Routes defaultRoute = new Routes();
+        routesDao.addRoute(defaultRoute);
+        assertEquals(defaultRoute, routesDao.getRoute(0));
+    }
+
+    @Test
+    void addRouteWithUsedValue() {
+        Executable testInsert = () -> routesDao.addRoute(route);
         assertThrows(SQLException.class, testInsert);
+    }
+
+    @Test
+    void updateRoute() {
+        route.setStops("New");
+        routesDao.updateRoute(route);
+        assertEquals(route, routesDao.getRoute(1));
+    }
+
+    @Test
+    void removeRoute() {
+        routesDao.removeRoute(1);
     }
 
     @AfterEach
     void remove() {
-        routeDao.removeRoute(0);
-        routeDao.removeRoute(1);
+        routesDao.removeRoute(1);
+        routesDao.removeRoute(0);
     }
 }
