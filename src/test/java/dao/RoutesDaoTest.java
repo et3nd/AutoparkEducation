@@ -4,7 +4,6 @@ import entity.Routes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.sql.SQLException;
 
@@ -40,8 +39,7 @@ class RoutesDaoTest {
 
     @Test
     void addRouteWithUsedValue() {
-        Executable testInsert = () -> routesDao.addRoute(route);
-        assertThrows(SQLException.class, testInsert);
+        assertThrows(SQLException.class, () -> routesDao.addRoute(route));
     }
 
     @Test

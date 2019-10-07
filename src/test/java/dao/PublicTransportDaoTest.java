@@ -4,7 +4,6 @@ import entity.PublicTransport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.sql.SQLException;
 
@@ -39,8 +38,7 @@ class PublicTransportDaoTest {
 
     @Test
     void addTransportWithUsedValue() {
-        Executable testInsert = () -> publicTransportDao.addPublicTransport(transport);
-        assertThrows(SQLException.class, testInsert);
+        assertThrows(SQLException.class, () -> publicTransportDao.addPublicTransport(transport));
     }
 
     @Test

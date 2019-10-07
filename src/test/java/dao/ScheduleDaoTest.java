@@ -4,7 +4,6 @@ import entity.Schedule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.sql.SQLException;
 import java.sql.Time;
@@ -40,8 +39,7 @@ class ScheduleDaoTest {
 
     @Test
     void addScheduleWithUsedValue() {
-        Executable testInsert = () -> scheduleDao.addSchedule(schedule);
-        assertThrows(SQLException.class, testInsert);
+        assertThrows(SQLException.class, () -> scheduleDao.addSchedule(schedule));
     }
 
     @Test

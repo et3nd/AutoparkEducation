@@ -4,7 +4,6 @@ import entity.Drivers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -42,8 +41,7 @@ class DriversDaoTest {
 
     @Test
     void addDriverWithUsedValue() {
-        Executable testInsert = () -> driverDao.addDriver(driver);
-        assertThrows(SQLException.class, testInsert);
+        assertThrows(SQLException.class, () -> driverDao.addDriver(driver));
     }
 
     @Test
