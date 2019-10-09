@@ -6,8 +6,8 @@ import java.util.Objects;
 
 public class Schedule {
     private int id;
-    private Time departureTime = Time.valueOf(LocalTime.of(0, 0, 0));
-    private Time arrivalTime = Time.valueOf(LocalTime.of(0, 0, 0));
+    private Time departureTime = Time.valueOf(LocalTime.of(0, 1, 1));
+    private Time arrivalTime = Time.valueOf(LocalTime.of(0, 1, 1));
 
     public int getId() {
         return id;

@@ -5,7 +5,7 @@ import java.util.Objects;
 public class PublicTransport {
     private int transportNumber;
     private String busBrand = "default";
-    private int capacity = 20;
+    private int capacity = 30;
     private int issueYear;
 
     public int getTransportNumber() {
