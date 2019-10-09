@@ -1,4 +1,4 @@
-INSERT INTO autopark.drivers
+INSERT INTO autopark.driver
 (LICENSE,
  FIO,
  SALARY,

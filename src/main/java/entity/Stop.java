@@ -4,7 +4,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Stops {
+public class Stop {
     private String stopName = "default";
     private String direction = "default";
     private Time arrivalTimeOnStop = Time.valueOf(LocalTime.of(0, 0, 0));
@@ -43,11 +43,11 @@ public class Stops {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Stops)) return false;
-        Stops stops = (Stops) o;
-        return Objects.equals(stopName, stops.stopName) &&
-                Objects.equals(direction, stops.direction) &&
-                Objects.equals(arrivalTimeOnStop, stops.arrivalTimeOnStop);
+        if (!(o instanceof Stop)) return false;
+        Stop stop = (Stop) o;
+        return Objects.equals(stopName, stop.stopName) &&
+                Objects.equals(direction, stop.direction) &&
+                Objects.equals(arrivalTimeOnStop, stop.arrivalTimeOnStop);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package dao;
 
-import entity.Drivers;
+import entity.Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,12 +9,11 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-class DriversDaoTest {
-    private DriversDao driverDao = new DriversDao();
-    private Drivers driver = new Drivers();
+class DriverDaoTest {
+    private DriverDao driverDao = new DriverDao();
+    private Driver driver = new Driver();
 
     @BeforeEach
     void addDriver() throws SQLException {
@@ -28,37 +27,41 @@ class DriversDaoTest {
 
     @Test
     void getDriver() {
-        assertEquals(driver, driverDao.getDriver(9999));
-        assertEquals(new Drivers(), driverDao.getDriver(1));
+        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
+        assertEquals(new Driver(), driverDao.getDriver(1));
     }
 
     @Test
     void addDriverWithDefaultValues() throws SQLException {
-        Drivers defaultDriver = new Drivers();
+        Driver defaultDriver = new Driver();
         driverDao.addDriver(defaultDriver);
-        assertEquals(defaultDriver, driverDao.getDriver(111111));
+        assertEquals(defaultDriver, driverDao.getDriver(0));
     }
 
     @Test
     void addDriverWithUsedValue() {
+        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         assertThrows(SQLException.class, () -> driverDao.addDriver(driver));
     }
 
     @Test
     void updateDriver() {
+        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driver.setFio("FIO");
         driverDao.updateDriver(driver);
-        assertEquals(driver, driverDao.getDriver(9999));
+        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
     }
 
     @Test
     void removeDriver() {
-        driverDao.removeDriver(9999);
+        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
+        driverDao.removeDriver(driver.getLicense());
+        assertNotEquals(driver, driverDao.getDriver(driver.getLicense()));
     }
 
     @AfterEach
     void remove() {
-        driverDao.removeDriver(9999);
-        driverDao.removeDriver(111111);
+        driverDao.removeDriver(driver.getLicense());
+        driverDao.removeDriver(0);
     }
 }

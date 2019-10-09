@@ -2,7 +2,7 @@ package entity;
 
 import java.util.Objects;
 
-public class Routes {
+public class Route {
     private int routeNumber;
     private String startStation = "default";
     private String endStation = "default";
@@ -61,13 +61,13 @@ public class Routes {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Routes)) return false;
-        Routes routes = (Routes) o;
-        return routeNumber == routes.routeNumber &&
-                distance == routes.distance &&
-                Objects.equals(startStation, routes.startStation) &&
-                Objects.equals(endStation, routes.endStation) &&
-                Objects.equals(stops, routes.stops);
+        if (!(o instanceof Route)) return false;
+        Route route = (Route) o;
+        return routeNumber == route.routeNumber &&
+                distance == route.distance &&
+                Objects.equals(startStation, route.startStation) &&
+                Objects.equals(endStation, route.endStation) &&
+                Objects.equals(stops, route.stops);
     }
 
     @Override

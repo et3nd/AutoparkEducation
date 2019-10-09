@@ -6,7 +6,7 @@ CREATE TABLE autopark.public_transport
     issue_year       INT(4),
     PRIMARY KEY (transport_number)
 );
-CREATE TABLE autopark.routes
+CREATE TABLE autopark.route
 (
     route_number  INT,
     start_station VARCHAR(40)  NOT NULL,
@@ -15,9 +15,9 @@ CREATE TABLE autopark.routes
     distance      INT,
     PRIMARY KEY (route_number)
 );
-CREATE TABLE autopark.drivers
+CREATE TABLE autopark.driver
 (
-    license    INT(20)     NOT NULL,
+    license    INT(6),
     fio        VARCHAR(40) NOT NULL,
     salary     INT         NOT NULL,
     address    VARCHAR(60) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE autopark.schedule
     arrival_time   TIME NOT NULL,
     PRIMARY KEY (id)
 );
-CREATE TABLE autopark.stops
+CREATE TABLE autopark.stop
 (
     stop_name            VARCHAR(30) NOT NULL,
     direction            VARCHAR(50) NOT NULL,

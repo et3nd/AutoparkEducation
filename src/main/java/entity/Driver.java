@@ -4,8 +4,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Drivers {
-    private int license = 111111;
+public class Driver {
+    private int license;
     private String fio = "default";
     private int salary = 20000;
     private String address = "default";
@@ -63,13 +63,13 @@ public class Drivers {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Drivers)) return false;
-        Drivers drivers = (Drivers) o;
-        return license == drivers.license &&
-                salary == drivers.salary &&
-                Objects.equals(fio, drivers.fio) &&
-                Objects.equals(address, drivers.address) &&
-                Objects.equals(birthDate, drivers.birthDate);
+        if (!(o instanceof Driver)) return false;
+        Driver driver = (Driver) o;
+        return license == driver.license &&
+                salary == driver.salary &&
+                Objects.equals(fio, driver.fio) &&
+                Objects.equals(address, driver.address) &&
+                Objects.equals(birthDate, driver.birthDate);
     }
 
     @Override

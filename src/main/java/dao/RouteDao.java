@@ -1,20 +1,20 @@
 package dao;
 
-import entity.Routes;
+import entity.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class RoutesDao extends EntityDao {
-    private static final Logger log = LoggerFactory.getLogger(RoutesDao.class);
+public class RouteDao extends EntityDao {
+    private static final Logger log = LoggerFactory.getLogger(RouteDao.class);
     private static final String ADD_ROUTE_SCRIPT = "/db/add-route-script.sql";
     private static final String UPDATE_ROUTE_SCRIPT = "/db/update-route-script.sql";
     private static final String REMOVE_ROUTE_SCRIPT = "/db/remove-route-script.sql";
     private static final String GET_ROUTE_SCRIPT = "/db/get-route-script.sql";
 
-    public void addRoute(Routes route) throws SQLException {
-        String script = getInitializationScript(RoutesDao.class.getResourceAsStream(ADD_ROUTE_SCRIPT));
+    public void addRoute(Route route) throws SQLException {
+        String script = getInitializationScript(RouteDao.class.getResourceAsStream(ADD_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
@@ -31,8 +31,8 @@ public class RoutesDao extends EntityDao {
         }
     }
 
-    public void updateRoute(Routes route) {
-        String script = getInitializationScript(RoutesDao.class.getResourceAsStream(UPDATE_ROUTE_SCRIPT));
+    public void updateRoute(Route route) {
+        String script = getInitializationScript(RouteDao.class.getResourceAsStream(UPDATE_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
@@ -45,7 +45,7 @@ public class RoutesDao extends EntityDao {
     }
 
     public void removeRoute(int routeNumber) {
-        String script = getInitializationScript(RoutesDao.class.getResourceAsStream(REMOVE_ROUTE_SCRIPT));
+        String script = getInitializationScript(RouteDao.class.getResourceAsStream(REMOVE_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
@@ -57,9 +57,9 @@ public class RoutesDao extends EntityDao {
         }
     }
 
-    public Routes getRoute(int routeNumber) {
-        Routes route = new Routes();
-        String script = getInitializationScript(RoutesDao.class.getResourceAsStream(GET_ROUTE_SCRIPT));
+    public Route getRoute(int routeNumber) {
+        Route route = new Route();
+        String script = getInitializationScript(RouteDao.class.getResourceAsStream(GET_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");

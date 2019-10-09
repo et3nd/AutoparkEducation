@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PublicTransportDaoTest {
     private PublicTransportDao publicTransportDao = new PublicTransportDao();
@@ -25,7 +24,7 @@ class PublicTransportDaoTest {
 
     @Test
     void getPublicTransport() {
-        assertEquals(transport, publicTransportDao.getPublicTransport(1));
+        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         assertEquals(new PublicTransport(), publicTransportDao.getPublicTransport(2));
     }
 
@@ -38,24 +37,28 @@ class PublicTransportDaoTest {
 
     @Test
     void addTransportWithUsedValue() {
+        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         assertThrows(SQLException.class, () -> publicTransportDao.addPublicTransport(transport));
     }
 
     @Test
     void updatePublicTransport() {
+        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         transport.setCapacity(99);
         publicTransportDao.updatePublicTransport(transport);
-        assertEquals(transport, publicTransportDao.getPublicTransport(1));
+        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
     }
 
     @Test
     void removePublicTransport() {
-        publicTransportDao.removePublicTransport(1);
+        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
+        publicTransportDao.removePublicTransport(transport.getTransportNumber());
+        assertNotEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
     }
 
     @AfterEach
     void remove() {
-        publicTransportDao.removePublicTransport(1);
+        publicTransportDao.removePublicTransport(transport.getTransportNumber());
         publicTransportDao.removePublicTransport(0);
     }
 }
