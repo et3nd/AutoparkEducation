@@ -1,13 +1,15 @@
 package entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Objects;
 
-public class Drivers {
+public class Driver {
     private int license;
-    private String fio;
-    private int salary;
-    private String address;
-    private Date birthDate;
+    private String fio = "default";
+    private int salary = 20000;
+    private String address = "default";
+    private Date birthDate = Date.valueOf(LocalDate.of(1900, 1, 1));
 
     public int getLicense() {
         return license;
@@ -56,5 +58,22 @@ public class Drivers {
                 + salary + " "
                 + address + " "
                 + birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Driver)) return false;
+        Driver driver = (Driver) o;
+        return license == driver.license &&
+                salary == driver.salary &&
+                Objects.equals(fio, driver.fio) &&
+                Objects.equals(address, driver.address) &&
+                Objects.equals(birthDate, driver.birthDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(license, fio, salary, address, birthDate);
     }
 }
