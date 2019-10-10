@@ -28,14 +28,15 @@ class DriverDaoTest {
     @Test
     void getDriver() {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
-        assertEquals(new Driver(), driverDao.getDriver(1));
+        assertNull(driverDao.getDriver(1));
     }
 
     @Test
     void addDriverWithDefaultValues() throws SQLException {
         Driver defaultDriver = new Driver();
+        defaultDriver.setLicense(9000);
         driverDao.addDriver(defaultDriver);
-        assertEquals(defaultDriver, driverDao.getDriver(0));
+        assertEquals(defaultDriver, driverDao.getDriver(defaultDriver.getLicense()));
     }
 
     @Test
@@ -56,12 +57,12 @@ class DriverDaoTest {
     void removeDriver() {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driverDao.removeDriver(driver.getLicense());
-        assertNotEquals(driver, driverDao.getDriver(driver.getLicense()));
+        assertNull(driverDao.getDriver(driver.getLicense()));
     }
 
     @AfterEach
     void remove() {
         driverDao.removeDriver(driver.getLicense());
-        driverDao.removeDriver(0);
+        driverDao.removeDriver(9000);
     }
 }

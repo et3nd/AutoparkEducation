@@ -75,10 +75,12 @@ public class DriverDao extends EntityDao {
                 }
                 log.info("Driver read was successful");
             }
+            if (driver.getLicense() == 0)
+                throw new SQLException("Default driver");
             return driver;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return driver;
+            return null;
         }
     }
 }

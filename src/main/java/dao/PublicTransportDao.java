@@ -73,10 +73,12 @@ public class PublicTransportDao extends EntityDao {
                 }
                 log.info("Transport read was successful");
             }
+            if (transport.getTransportNumber() == 0)
+                throw new SQLException("Default transport");
             return transport;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return transport;
+            return null;
         }
     }
 }

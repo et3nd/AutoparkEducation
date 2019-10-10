@@ -25,14 +25,15 @@ class PublicTransportDaoTest {
     @Test
     void getPublicTransport() {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
-        assertEquals(new PublicTransport(), publicTransportDao.getPublicTransport(2));
+        assertNull(publicTransportDao.getPublicTransport(2));
     }
 
     @Test
     void addTransportWithDefaultValues() throws SQLException {
         PublicTransport defaultTransport = new PublicTransport();
+        defaultTransport.setTransportNumber(10);
         publicTransportDao.addPublicTransport(defaultTransport);
-        assertEquals(defaultTransport, publicTransportDao.getPublicTransport(0));
+        assertEquals(defaultTransport, publicTransportDao.getPublicTransport(defaultTransport.getTransportNumber()));
     }
 
     @Test
@@ -53,12 +54,12 @@ class PublicTransportDaoTest {
     void removePublicTransport() {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
-        assertNotEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
+        assertNull(publicTransportDao.getPublicTransport(transport.getTransportNumber()));
     }
 
     @AfterEach
     void remove() {
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
-        publicTransportDao.removePublicTransport(0);
+        publicTransportDao.removePublicTransport(10);
     }
 }

@@ -71,10 +71,12 @@ public class ScheduleDao extends EntityDao {
                 }
                 log.info("Schedule read was successful");
             }
+            if (schedule.getId() == 0)
+                throw new SQLException("Default schedule");
             return schedule;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return schedule;
+            return null;
         }
     }
 }

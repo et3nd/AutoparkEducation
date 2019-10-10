@@ -75,10 +75,12 @@ public class RouteDao extends EntityDao {
                 }
                 log.info("Route read was successful");
             }
+            if (route.getRouteNumber() == 0)
+                throw new SQLException("Default route");
             return route;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return route;
+            return null;
         }
     }
 }

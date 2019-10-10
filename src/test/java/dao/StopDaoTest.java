@@ -26,14 +26,15 @@ class StopDaoTest {
     @Test
     void getStop() {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
-        assertEquals(new Stop(), stopDao.getStop(""));
+        assertNull(stopDao.getStop(""));
     }
 
     @Test
     void addStopWithDefaultValues() throws SQLException {
         Stop defaultStop = new Stop();
+        defaultStop.setStopName("default stop");
         stopDao.addStop(defaultStop);
-        assertEquals(defaultStop, stopDao.getStop("default"));
+        assertEquals(defaultStop, stopDao.getStop(defaultStop.getStopName()));
     }
 
     @Test
@@ -54,12 +55,12 @@ class StopDaoTest {
     void removeStop() {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         stopDao.removeStop(stop.getStopName());
-        assertNotEquals(stop, stopDao.getStop(stop.getStopName()));
+        assertNull(stopDao.getStop(stop.getStopName()));
     }
 
     @AfterEach
     void remove() {
         stopDao.removeStop(stop.getStopName());
-        stopDao.removeStop("default");
+        stopDao.removeStop("default stop");
     }
 }

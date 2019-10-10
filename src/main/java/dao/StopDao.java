@@ -71,10 +71,12 @@ public class StopDao extends EntityDao {
                 }
                 log.info("Stop read was successful");
             }
+            if (stop.getStopName().equals("default"))
+                throw new SQLException("Default stop");
             return stop;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return stop;
+            return null;
         }
     }
 }

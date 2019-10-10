@@ -26,14 +26,15 @@ class RouteDaoTest {
     @Test
     void getRoute() {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
-        assertEquals(new Route(), routeDao.getRoute(11));
+        assertNull(routeDao.getRoute(2));
     }
 
     @Test
     void addRouteWithDefaultValues() throws SQLException {
         Route defaultRoute = new Route();
+        defaultRoute.setRouteNumber(10);
         routeDao.addRoute(defaultRoute);
-        assertEquals(defaultRoute, routeDao.getRoute(0));
+        assertEquals(defaultRoute, routeDao.getRoute(defaultRoute.getRouteNumber()));
     }
 
     @Test
@@ -54,12 +55,12 @@ class RouteDaoTest {
     void removeRoute() {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
         routeDao.removeRoute(route.getRouteNumber());
-        assertNotEquals(route, routeDao.getRoute(route.getRouteNumber()));
+        assertNull(routeDao.getRoute(route.getRouteNumber()));
     }
 
     @AfterEach
     void remove() {
         routeDao.removeRoute(route.getRouteNumber());
-        routeDao.removeRoute(0);
+        routeDao.removeRoute(10);
     }
 }

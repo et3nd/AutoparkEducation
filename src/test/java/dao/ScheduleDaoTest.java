@@ -26,14 +26,15 @@ class ScheduleDaoTest {
     @Test
     void getSchedule() {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
-        assertEquals(new Schedule(), scheduleDao.getSchedule(11));
+        assertNull(scheduleDao.getSchedule(2));
     }
 
     @Test
     void addScheduleWithDefaultValues() throws SQLException {
         Schedule defaultSchedule = new Schedule();
+        defaultSchedule.setId(10);
         scheduleDao.addSchedule(defaultSchedule);
-        assertEquals(defaultSchedule, scheduleDao.getSchedule(0));
+        assertEquals(defaultSchedule, scheduleDao.getSchedule(defaultSchedule.getId()));
     }
 
     @Test
@@ -54,12 +55,12 @@ class ScheduleDaoTest {
     void removeSchedule() {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
         scheduleDao.removeSchedule(schedule.getId());
-        assertNotEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
+        assertNull(scheduleDao.getSchedule(schedule.getId()));
     }
 
     @AfterEach
     void remove() {
         scheduleDao.removeSchedule(schedule.getId());
-        scheduleDao.removeSchedule(0);
+        scheduleDao.removeSchedule(10);
     }
 }
