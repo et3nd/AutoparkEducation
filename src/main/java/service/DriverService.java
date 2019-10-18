@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class DriverService {
+public class DriverService {
     private static final Logger log = LoggerFactory.getLogger(DriverService.class);
     private DriverDao driverDao;
 
-    void setDriverDao(DriverDao driverDao) {
+    public void setDriverDao(DriverDao driverDao) {
         this.driverDao = driverDao;
     }
 
-    void addDriver(Driver driver) {
+    public void addDriver(Driver driver) {
         try {
             driverDao.addDriver(driver);
         } catch (SQLException e) {
@@ -23,15 +23,15 @@ class DriverService {
         }
     }
 
-    void updateDriver(Driver driver) {
+    public void updateDriver(Driver driver) {
         driverDao.updateDriver(driver);
     }
 
-    void removeDriver(int license) {
+    public void removeDriver(int license) {
         driverDao.removeDriver(license);
     }
 
-    Driver getDriver(int license) {
+    public Driver getDriver(int license) {
         return driverDao.getDriver(license);
     }
 }

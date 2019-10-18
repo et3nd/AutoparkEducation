@@ -53,11 +53,9 @@ public class Driver {
 
     @Override
     public String toString() {
-        return license + " "
-                + fio + " "
-                + salary + " "
-                + address + " "
-                + birthDate;
+        return String.format("%-10s %30s %10s %20s %15s\n", "Лицензия", "ФИО", "Зарплaта", "Адрес", "Дата рождения")
+                + "\n"
+                + String.format("%-10s %30s %10s %20s %15s\n", license, fio, salary, address, birthDate);
     }
 
     @Override

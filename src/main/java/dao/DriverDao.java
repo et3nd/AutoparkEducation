@@ -71,12 +71,12 @@ public class DriverDao extends EntityDao {
                     driver.setSalary(resultSet.getInt("salary"));
                     driver.setLicense(resultSet.getInt("license"));
                     driver.setBirthDate(Date.valueOf(String.valueOf(resultSet.getDate("birth_date"))));
-                    log.info("Read: " + driver.toString());
+                    log.info("Read: \n" + driver.toString());
                 }
                 log.info("Driver read was successful");
             }
             if (driver.getLicense() == 0)
-                throw new SQLException("Default driver");
+                throw new SQLException("Not found");
             return driver;
         } catch (SQLException e) {
             log.error("Error: ", e);
