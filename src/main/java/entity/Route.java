@@ -51,11 +51,9 @@ public class Route {
 
     @Override
     public String toString() {
-        return routeNumber + " "
-                + startStation + " "
-                + endStation + " "
-                + stops + " "
-                + distance;
+        return String.format("%-5s %15s %15s %30s %10s\n", "Номер", "Начальная", "Конечная", "Остановки", "Дистанция")
+                + "\n"
+                + String.format("%-5s %15s %15s %30s %10s\n", routeNumber, startStation, endStation, stops, distance);
     }
 
     @Override

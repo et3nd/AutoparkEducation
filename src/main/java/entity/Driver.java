@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Driver {
     private int license;
     private String fio = "default";
-    private int salary = 20000;
+    private int salary;
     private String address = "default";
     private Date birthDate = Date.valueOf(LocalDate.of(1900, 1, 1));
 

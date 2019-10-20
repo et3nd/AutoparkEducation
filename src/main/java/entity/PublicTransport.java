@@ -5,7 +5,7 @@ import java.util.Objects;
 public class PublicTransport {
     private int transportNumber;
     private String busBrand = "default";
-    private int capacity = 30;
+    private int capacity;
     private int issueYear;
 
     public int getTransportNumber() {
@@ -42,10 +42,9 @@ public class PublicTransport {
 
     @Override
     public String toString() {
-        return transportNumber + " "
-                + busBrand + " "
-                + capacity + " "
-                + issueYear;
+        return String.format("%-5s %10s %15s %12s\n", "Номер", "Марка", "Вместительность", "Год выпуска")
+                + "\n"
+                + String.format("%-5s %10s %15s %12s\n", transportNumber, busBrand, capacity, issueYear);
     }
 
     @Override

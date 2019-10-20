@@ -35,9 +35,9 @@ public class Stop {
 
     @Override
     public String toString() {
-        return stopName + " "
-                + direction + " "
-                + arrivalTimeOnStop;
+        return String.format("%-15s %15s %30s\n", "Название", "Направление", "Оставшееся время до прибытия")
+                + "\n"
+                + String.format("%-15s %15s %30s\n", stopName, direction, arrivalTimeOnStop);
     }
 
     @Override
