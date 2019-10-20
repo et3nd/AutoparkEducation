@@ -36,7 +36,11 @@ public class DriverDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
+            preparedStatement.setInt(5, driver.getLicense());
             preparedStatement.setString(1, driver.getFio());
+            preparedStatement.setInt(2, driver.getSalary());
+            preparedStatement.setString(3, driver.getAddress());
+            preparedStatement.setDate(4, driver.getBirthDate());
             preparedStatement.execute();
             log.info("Driver update was successful");
         } catch (SQLException e) {

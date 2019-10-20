@@ -34,7 +34,9 @@ public class ScheduleDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setTime(1, schedule.getArrivalTime());
+            preparedStatement.setInt(3, schedule.getId());
+            preparedStatement.setTime(1, schedule.getDepartureTime());
+            preparedStatement.setTime(2, schedule.getArrivalTime());
             preparedStatement.execute();
             log.info("Schedule update was successful");
         } catch (SQLException e) {
@@ -67,12 +69,12 @@ public class ScheduleDao extends EntityDao {
                     schedule.setId(resultSet.getInt("id"));
                     schedule.setDepartureTime(Time.valueOf(String.valueOf(resultSet.getTime("departure_time"))));
                     schedule.setArrivalTime(Time.valueOf(String.valueOf(resultSet.getTime("arrival_time"))));
-                    log.info("Read: " + schedule);
+                    log.info("Read: \n" + schedule);
                 }
                 log.info("Schedule read was successful");
             }
             if (schedule.getId() == 0)
-                throw new SQLException("Default schedule");
+                throw new SQLException("Not found");
             return schedule;
         } catch (SQLException e) {
             log.error("Error: ", e);

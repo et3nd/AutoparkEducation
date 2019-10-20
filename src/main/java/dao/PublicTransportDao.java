@@ -35,7 +35,10 @@ public class PublicTransportDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, transport.getCapacity());
+            preparedStatement.setInt(4, transport.getTransportNumber());
+            preparedStatement.setString(1, transport.getBusBrand());
+            preparedStatement.setInt(2, transport.getCapacity());
+            preparedStatement.setInt(3, transport.getIssueYear());
             preparedStatement.execute();
             log.info("Transport update was successful");
         } catch (SQLException e) {
@@ -69,12 +72,12 @@ public class PublicTransportDao extends EntityDao {
                     transport.setBusBrand(resultSet.getString("bus_brand"));
                     transport.setCapacity(resultSet.getInt("capacity"));
                     transport.setIssueYear(resultSet.getInt("issue_year"));
-                    log.info("Read: " + transport);
+                    log.info("Read: \n" + transport);
                 }
                 log.info("Transport read was successful");
             }
             if (transport.getTransportNumber() == 0)
-                throw new SQLException("Default transport");
+                throw new SQLException("Not found");
             return transport;
         } catch (SQLException e) {
             log.error("Error: ", e);
