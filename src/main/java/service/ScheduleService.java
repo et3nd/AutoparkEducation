@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class ScheduleService {
+public class ScheduleService {
     private static final Logger log = LoggerFactory.getLogger(ScheduleService.class);
     private ScheduleDao scheduleDao;
 
-    void setScheduleDao(ScheduleDao scheduleDao) {
+    public void setScheduleDao(ScheduleDao scheduleDao) {
         this.scheduleDao = scheduleDao;
     }
 
-    void addSchedule(Schedule schedule) {
+    public void addSchedule(Schedule schedule) {
         try {
             scheduleDao.addSchedule(schedule);
         } catch (SQLException e) {
@@ -23,15 +23,15 @@ class ScheduleService {
         }
     }
 
-    void updateSchedule(Schedule schedule) {
+    public void updateSchedule(Schedule schedule) {
         scheduleDao.updateSchedule(schedule);
     }
 
-    void removeSchedule(int id) {
+    public void removeSchedule(int id) {
         scheduleDao.removeSchedule(id);
     }
 
-    Schedule getSchedule(int id) {
+    public Schedule getSchedule(int id) {
         return scheduleDao.getSchedule(id);
     }
 }

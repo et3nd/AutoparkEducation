@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class StopService {
+public class StopService {
     private static final Logger log = LoggerFactory.getLogger(StopService.class);
     private StopDao stopDao;
 
-    void setStopDao(StopDao stopDao) {
+    public void setStopDao(StopDao stopDao) {
         this.stopDao = stopDao;
     }
 
-    void addStop(Stop stop) {
+    public void addStop(Stop stop) {
         try {
             stopDao.addStop(stop);
         } catch (SQLException e) {
@@ -23,15 +23,15 @@ class StopService {
         }
     }
 
-    void updateStop(Stop stop) {
+    public void updateStop(Stop stop) {
         stopDao.updateStop(stop);
     }
 
-    void removeStop(String stopName) {
+    public void removeStop(String stopName) {
         stopDao.removeStop(stopName);
     }
 
-    Stop getStop(String stopName) {
+    public Stop getStop(String stopName) {
         return stopDao.getStop(stopName);
     }
 }

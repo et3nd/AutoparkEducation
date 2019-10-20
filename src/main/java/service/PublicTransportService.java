@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class PublicTransportService {
+public class PublicTransportService {
     private static final Logger log = LoggerFactory.getLogger(PublicTransportService.class);
     private PublicTransportDao publicTransportDao;
 
-    void setPublicTransportDao(PublicTransportDao publicTransportDao) {
+    public void setPublicTransportDao(PublicTransportDao publicTransportDao) {
         this.publicTransportDao = publicTransportDao;
     }
 
-    void addPublicTransport(PublicTransport transport) {
+    public void addPublicTransport(PublicTransport transport) {
         try {
             publicTransportDao.addPublicTransport(transport);
         } catch (SQLException e) {
@@ -23,15 +23,15 @@ class PublicTransportService {
         }
     }
 
-    void updatePublicTransport(PublicTransport transport) {
+    public void updatePublicTransport(PublicTransport transport) {
         publicTransportDao.updatePublicTransport(transport);
     }
 
-    void removePublicTransport(int transportNumber) {
+    public void removePublicTransport(int transportNumber) {
         publicTransportDao.removePublicTransport(transportNumber);
     }
 
-    PublicTransport getPublicTransport(int transportNumber) {
+    public PublicTransport getPublicTransport(int transportNumber) {
         return publicTransportDao.getPublicTransport(transportNumber);
     }
 }

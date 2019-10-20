@@ -7,15 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class RouteService {
+public class RouteService {
     private static final Logger log = LoggerFactory.getLogger(RouteService.class);
     private RouteDao routeDao;
 
-    void setRouteDao(RouteDao routeDao) {
+    public void setRouteDao(RouteDao routeDao) {
         this.routeDao = routeDao;
     }
 
-    void addRoute(Route route) {
+    public void addRoute(Route route) {
         try {
             routeDao.addRoute(route);
         } catch (SQLException e) {
@@ -23,15 +23,15 @@ class RouteService {
         }
     }
 
-    void updateRoute(Route route) {
+    public void updateRoute(Route route) {
         routeDao.updateRoute(route);
     }
 
-    void removeRoute(int routeNumber) {
+    public void removeRoute(int routeNumber) {
         routeDao.removeRoute(routeNumber);
     }
 
-    Route getRoute(int routeNumber) {
+    public Route getRoute(int routeNumber) {
         return routeDao.getRoute(routeNumber);
     }
 }
