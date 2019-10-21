@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>auto</groupId>
-    <artifactId>Education</artifactId>
+    <artifactId>education</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Education Maven Webapp</name>
+    <name>education maven webapp</name>
     <url>http://maven.apache.org</url>
 
     <properties>
