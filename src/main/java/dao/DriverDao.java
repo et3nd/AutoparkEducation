@@ -18,6 +18,7 @@ public class DriverDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
+            if (driver.getLicense() == 0) throw new SQLException("Zero identifier");
             preparedStatement.setInt(1, driver.getLicense());
             preparedStatement.setString(2, driver.getFio());
             preparedStatement.setInt(3, driver.getSalary());
@@ -27,11 +28,11 @@ public class DriverDao extends EntityDao {
             log.info("Driver add was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void updateDriver(Driver driver) {
+    public void updateDriver(Driver driver) throws SQLException {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(UPDATE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -45,10 +46,11 @@ public class DriverDao extends EntityDao {
             log.info("Driver update was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void removeDriver(int license) {
+    public void removeDriver(int license) throws SQLException {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -58,10 +60,11 @@ public class DriverDao extends EntityDao {
             log.info("Driver remove was successful");
         } catch (SQLException e) {
             log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public Driver getDriver(int license) {
+    public Driver getDriver(int license) throws SQLException {
         Driver driver = new Driver();
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
@@ -79,12 +82,11 @@ public class DriverDao extends EntityDao {
                 }
                 log.info("Driver read was successful");
             }
-            if (driver.getLicense() == 0)
-                throw new SQLException("Not found");
+            if (driver.getLicense() == 0) throw new SQLException("Driver does not exist");
             return driver;
         } catch (SQLException e) {
             log.error("Error: ", e);
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 }
