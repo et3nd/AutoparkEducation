@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ScheduleDaoTest {
     private ScheduleDao scheduleDao = new ScheduleDao();
@@ -24,9 +25,9 @@ class ScheduleDaoTest {
     }
 
     @Test
-    void getSchedule() {
+    void getSchedule() throws SQLException {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
-        assertNull(scheduleDao.getSchedule(2));
+        assertThrows(SQLException.class, () -> scheduleDao.getSchedule(2));
     }
 
     @Test
@@ -38,13 +39,13 @@ class ScheduleDaoTest {
     }
 
     @Test
-    void addScheduleWithUsedValue() {
+    void addScheduleWithUsedValue() throws SQLException {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
         assertThrows(SQLException.class, () -> scheduleDao.addSchedule(schedule));
     }
 
     @Test
-    void updateSchedule() {
+    void updateSchedule() throws SQLException {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
         schedule.setArrivalTime(Time.valueOf(LocalTime.of(9, 15, 0)));
         scheduleDao.updateSchedule(schedule);
@@ -52,14 +53,14 @@ class ScheduleDaoTest {
     }
 
     @Test
-    void removeSchedule() {
+    void removeSchedule() throws SQLException {
         assertEquals(schedule, scheduleDao.getSchedule(schedule.getId()));
         scheduleDao.removeSchedule(schedule.getId());
-        assertNull(scheduleDao.getSchedule(schedule.getId()));
+        assertThrows(SQLException.class, () -> scheduleDao.getSchedule(schedule.getId()));
     }
 
     @AfterEach
-    void remove() {
+    void remove() throws SQLException {
         scheduleDao.removeSchedule(schedule.getId());
         scheduleDao.removeSchedule(10);
     }

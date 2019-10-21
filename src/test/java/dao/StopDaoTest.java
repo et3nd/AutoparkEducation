@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StopDaoTest {
     private StopDao stopDao = new StopDao();
@@ -24,9 +25,9 @@ class StopDaoTest {
     }
 
     @Test
-    void getStop() {
+    void getStop() throws SQLException {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
-        assertNull(stopDao.getStop(""));
+        assertThrows(SQLException.class, () -> stopDao.getStop(""));
     }
 
     @Test
@@ -38,13 +39,13 @@ class StopDaoTest {
     }
 
     @Test
-    void addStopWithUsedValue() {
+    void addStopWithUsedValue() throws SQLException {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         assertThrows(SQLException.class, () -> stopDao.addStop(stop));
     }
 
     @Test
-    void updateStop() {
+    void updateStop() throws SQLException {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         stop.setDirection("New");
         stopDao.updateStop(stop);
@@ -52,14 +53,14 @@ class StopDaoTest {
     }
 
     @Test
-    void removeStop() {
+    void removeStop() throws SQLException {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         stopDao.removeStop(stop.getStopName());
-        assertNull(stopDao.getStop(stop.getStopName()));
+        assertThrows(SQLException.class, () -> stopDao.getStop(stop.getStopName()));
     }
 
     @AfterEach
-    void remove() {
+    void remove() throws SQLException {
         stopDao.removeStop(stop.getStopName());
         stopDao.removeStop("default stop");
     }

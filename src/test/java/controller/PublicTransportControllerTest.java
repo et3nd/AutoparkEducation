@@ -14,7 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PublicTransportControllerTest {
@@ -33,7 +34,8 @@ class PublicTransportControllerTest {
 
     @Test
     void getPublicTransport() throws JsonProcessingException {
-        doReturn(transport).when(transportService).getPublicTransport(transport.getTransportNumber());
+        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(transport)).
+                when(transportService).getPublicTransport(transport.getTransportNumber());
         assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(transport),
                 transportController.getPublicTransport(transport.getTransportNumber()));
         verify(transportService).getPublicTransport(transport.getTransportNumber());
@@ -41,34 +43,25 @@ class PublicTransportControllerTest {
 
     @Test
     void removePublicTransport() {
-        doNothing().when(transportService).removePublicTransport(transport.getTransportNumber());
+        doReturn("Success").when(transportService).removePublicTransport(transport.getTransportNumber());
         transportController.removePublicTransport(transport.getTransportNumber());
         verify(transportService).removePublicTransport(transport.getTransportNumber());
     }
 
     @Test
     void addPublicTransport() throws JsonProcessingException {
-        doNothing().when(transportService).addPublicTransport(transport);
-        doReturn(null, transport).when(transportService).getPublicTransport(transport.getTransportNumber());
+        doReturn("Success").when(transportService).
+                addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
         transportController.addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        verify(transportService).addPublicTransport(transport);
-    }
-
-    @Test
-    void addTransportWithException() {
-        transportController.addPublicTransport("Input");
+        verify(transportService).addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
     }
 
     @Test
     void updatePublicTransport() throws JsonProcessingException {
-        doNothing().when(transportService).updatePublicTransport(transport);
-        doReturn(transport).when(transportService).getPublicTransport(transport.getTransportNumber());
+        doReturn("Success").when(transportService)
+                .updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
         transportController.updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        verify(transportService).updatePublicTransport(transport);
-    }
-
-    @Test
-    void updateTransportWithException() {
-        transportController.updatePublicTransport("Input");
+        verify(transportService)
+                .updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
     }
 }

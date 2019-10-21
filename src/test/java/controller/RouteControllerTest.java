@@ -14,7 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class RouteControllerTest {
@@ -33,41 +34,29 @@ class RouteControllerTest {
 
     @Test
     void getRoute() throws JsonProcessingException {
-        doReturn(route).when(routeService).getRoute(route.getRouteNumber());
+        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(route)).when(routeService).getRoute(route.getRouteNumber());
         assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(route), routeController.getRoute(route.getRouteNumber()));
         verify(routeService).getRoute(route.getRouteNumber());
     }
 
     @Test
     void removeRoute() {
-        doNothing().when(routeService).removeRoute(route.getRouteNumber());
+        doReturn("Success").when(routeService).removeRoute(route.getRouteNumber());
         routeController.removeRoute(route.getRouteNumber());
         verify(routeService).removeRoute(route.getRouteNumber());
     }
 
     @Test
     void addRoute() throws JsonProcessingException {
-        doNothing().when(routeService).addRoute(route);
-        doReturn(null, route).when(routeService).getRoute(route.getRouteNumber());
+        doReturn("Success").when(routeService).addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
         routeController.addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        verify(routeService).addRoute(route);
-    }
-
-    @Test
-    void addRouteWithException() {
-        routeController.addRoute("Input");
+        verify(routeService).addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
     }
 
     @Test
     void updateRoute() throws JsonProcessingException {
-        doNothing().when(routeService).updateRoute(route);
-        doReturn(route).when(routeService).getRoute(route.getRouteNumber());
+        doReturn("Success").when(routeService).updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
         routeController.updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        verify(routeService).updateRoute(route);
-    }
-
-    @Test
-    void updateDriverWithException() {
-        routeController.updateRoute("Input");
+        verify(routeService).updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
     }
 }

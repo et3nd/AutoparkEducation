@@ -9,7 +9,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DriverDaoTest {
     private DriverDao driverDao = new DriverDao();
@@ -26,9 +27,9 @@ class DriverDaoTest {
     }
 
     @Test
-    void getDriver() {
+    void getDriver() throws SQLException {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
-        assertNull(driverDao.getDriver(1));
+        assertThrows(SQLException.class, () -> driverDao.getDriver(1));
     }
 
     @Test
@@ -40,13 +41,13 @@ class DriverDaoTest {
     }
 
     @Test
-    void addDriverWithUsedValue() {
+    void addDriverWithUsedValue() throws SQLException {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         assertThrows(SQLException.class, () -> driverDao.addDriver(driver));
     }
 
     @Test
-    void updateDriver() {
+    void updateDriver() throws SQLException {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driver.setFio("FIO");
         driverDao.updateDriver(driver);
@@ -54,14 +55,14 @@ class DriverDaoTest {
     }
 
     @Test
-    void removeDriver() {
+    void removeDriver() throws SQLException {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driverDao.removeDriver(driver.getLicense());
-        assertNull(driverDao.getDriver(driver.getLicense()));
+        assertThrows(SQLException.class, () -> driverDao.getDriver(driver.getLicense()));
     }
 
     @AfterEach
-    void remove() {
+    void remove() throws SQLException {
         driverDao.removeDriver(driver.getLicense());
         driverDao.removeDriver(9000);
     }

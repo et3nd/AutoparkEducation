@@ -14,7 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class StopControllerTest {
@@ -33,41 +34,29 @@ class StopControllerTest {
 
     @Test
     void getStop() throws JsonProcessingException {
-        doReturn(stop).when(stopService).getStop(stop.getStopName());
+        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(stop)).when(stopService).getStop(stop.getStopName());
         assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(stop), stopController.getStop(stop.getStopName()));
         verify(stopService).getStop(stop.getStopName());
     }
 
     @Test
     void removeStop() {
-        doNothing().when(stopService).removeStop(stop.getStopName());
+        doReturn("Success").when(stopService).removeStop(stop.getStopName());
         stopController.removeStop(stop.getStopName());
         verify(stopService).removeStop(stop.getStopName());
     }
 
     @Test
     void addStop() throws JsonProcessingException {
-        doNothing().when(stopService).addStop(stop);
-        doReturn(null, stop).when(stopService).getStop(stop.getStopName());
+        doReturn("Success").when(stopService).addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
         stopController.addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        verify(stopService).addStop(stop);
-    }
-
-    @Test
-    void addStopWithException() {
-        stopController.addStop("Input");
+        verify(stopService).addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
     }
 
     @Test
     void updateStop() throws JsonProcessingException {
-        doNothing().when(stopService).updateStop(stop);
-        doReturn(stop).when(stopService).getStop(stop.getStopName());
+        doReturn("Success").when(stopService).updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
         stopController.updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        verify(stopService).updateStop(stop);
-    }
-
-    @Test
-    void updateStopWithException() {
-        stopController.updateStop("Input");
+        verify(stopService).updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
     }
 }

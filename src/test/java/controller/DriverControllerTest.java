@@ -14,7 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DriverControllerTest {
@@ -33,41 +34,29 @@ class DriverControllerTest {
 
     @Test
     void getDriver() throws JsonProcessingException {
-        doReturn(driver).when(driverService).getDriver(driver.getLicense());
+        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(driver)).when(driverService).getDriver(driver.getLicense());
         assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(driver), driverController.getDriver(driver.getLicense()));
         verify(driverService).getDriver(driver.getLicense());
     }
 
     @Test
     void removeDriver() {
-        doNothing().when(driverService).removeDriver(driver.getLicense());
+        doReturn("Success").when(driverService).removeDriver(driver.getLicense());
         driverController.removeDriver(driver.getLicense());
         verify(driverService).removeDriver(driver.getLicense());
     }
 
     @Test
     void addDriver() throws JsonProcessingException {
-        doNothing().when(driverService).addDriver(driver);
-        doReturn(null, driver).when(driverService).getDriver(driver.getLicense());
+        doReturn("Success").when(driverService).addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
         driverController.addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        verify(driverService).addDriver(driver);
-    }
-
-    @Test
-    void addDriverWithException() {
-        driverController.addDriver("Input");
+        verify(driverService).addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
     }
 
     @Test
     void updateDriver() throws JsonProcessingException {
-        doNothing().when(driverService).updateDriver(driver);
-        doReturn(driver).when(driverService).getDriver(driver.getLicense());
+        doReturn("Success").when(driverService).updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
         driverController.updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        verify(driverService).updateDriver(driver);
-    }
-
-    @Test
-    void updateDriverWithException() {
-        driverController.updateDriver("Input");
+        verify(driverService).updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
     }
 }
