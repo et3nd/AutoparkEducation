@@ -25,7 +25,6 @@ public class StopDao extends EntityDao {
             preparedStatement.execute();
             log.info("Stop add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -41,7 +40,6 @@ public class StopDao extends EntityDao {
             preparedStatement.execute();
             log.info("Stop update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -55,7 +53,6 @@ public class StopDao extends EntityDao {
             preparedStatement.execute();
             log.info("Stop remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -79,7 +76,6 @@ public class StopDao extends EntityDao {
             if (stop.getStopName().equals("default")) throw new SQLException("Stop does not exist");
             return stop;
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }

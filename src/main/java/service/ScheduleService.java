@@ -1,44 +1,33 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.ScheduleDao;
 import entity.Schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 
 public class ScheduleService {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(ScheduleService.class);
-    private ScheduleDao scheduleDao;
+    private ScheduleDao scheduleDao = new ScheduleDao();
 
-    public void setScheduleDao(ScheduleDao scheduleDao) {
+    void setScheduleDao(ScheduleDao scheduleDao) {
         this.scheduleDao = scheduleDao;
     }
 
-    public String addSchedule(String input) {
+    public void addSchedule(Schedule schedule) throws SQLException {
         try {
-            Schedule schedule = new ObjectMapper().setDateFormat(df).readValue(input, Schedule.class);
             scheduleDao.addSchedule(schedule);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String updateSchedule(String input) {
+    public void updateSchedule(Schedule inputSchedule) throws SQLException {
         try {
-            Schedule inputSchedule = new ObjectMapper().setDateFormat(df).readValue(input, Schedule.class);
             Schedule outputSchedule = scheduleDao.getSchedule(inputSchedule.getId());
             if (inputSchedule.equals(outputSchedule)) throw new SQLException("Same values");
             if (!(inputSchedule.getArrivalTime().equals(Time.valueOf(LocalTime.of(0, 1, 1)))))
@@ -46,34 +35,28 @@ public class ScheduleService {
             if (!(inputSchedule.getDepartureTime().equals(Time.valueOf(LocalTime.of(0, 1, 1)))))
                 outputSchedule.setDepartureTime(inputSchedule.getDepartureTime());
             scheduleDao.updateSchedule(outputSchedule);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String removeSchedule(int id) {
+    public void removeSchedule(int id) throws SQLException {
         try {
             scheduleDao.getSchedule(id);
             scheduleDao.removeSchedule(id);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String getSchedule(int id) {
+    public Schedule getSchedule(int id) throws SQLException {
         try {
-            Schedule schedule = scheduleDao.getSchedule(id);
-            return new ObjectMapper().setDateFormat(df).writeValueAsString(schedule);
+            return scheduleDao.getSchedule(id);
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (JsonProcessingException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 }

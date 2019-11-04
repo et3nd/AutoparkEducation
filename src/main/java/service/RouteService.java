@@ -1,42 +1,31 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.RouteDao;
 import entity.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class RouteService {
     private static final Logger log = LoggerFactory.getLogger(RouteService.class);
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    private RouteDao routeDao;
+    private RouteDao routeDao = new RouteDao();
 
-    public void setRouteDao(RouteDao routeDao) {
+    void setRouteDao(RouteDao routeDao) {
         this.routeDao = routeDao;
     }
 
-    public String addRoute(String input) {
+    public void addRoute(Route route) throws SQLException {
         try {
-            Route route = new ObjectMapper().setDateFormat(df).readValue(input, Route.class);
             routeDao.addRoute(route);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String updateRoute(String input) {
+    public void updateRoute(Route inputRoute) throws SQLException {
         try {
-            Route inputRoute = new ObjectMapper().setDateFormat(df).readValue(input, Route.class);
             Route outputRoute = routeDao.getRoute(inputRoute.getRouteNumber());
             if (inputRoute.equals(outputRoute)) throw new SQLException("Same values");
             if (!(inputRoute.getStartStation().equals("default")))
@@ -45,34 +34,28 @@ public class RouteService {
             if (!(inputRoute.getStops().equals("default"))) outputRoute.setStops(inputRoute.getStops());
             if (!(inputRoute.getDistance() == 0)) outputRoute.setDistance(inputRoute.getDistance());
             routeDao.updateRoute(outputRoute);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String removeRoute(int routeNumber) {
+    public void removeRoute(int routeNumber) throws SQLException {
         try {
             routeDao.getRoute(routeNumber);
             routeDao.removeRoute(routeNumber);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String getRoute(int routeNumber) {
+    public Route getRoute(int routeNumber) throws SQLException {
         try {
-            Route route = routeDao.getRoute(routeNumber);
-            return new ObjectMapper().setDateFormat(df).writeValueAsString(route);
+            return routeDao.getRoute(routeNumber);
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (JsonProcessingException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 }

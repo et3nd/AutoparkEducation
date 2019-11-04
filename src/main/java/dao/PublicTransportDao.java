@@ -26,7 +26,6 @@ public class PublicTransportDao extends EntityDao {
             preparedStatement.execute();
             log.info("Transport add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -43,7 +42,6 @@ public class PublicTransportDao extends EntityDao {
             preparedStatement.execute();
             log.info("Transport update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -57,7 +55,6 @@ public class PublicTransportDao extends EntityDao {
             preparedStatement.execute();
             log.info("Transport remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -82,7 +79,6 @@ public class PublicTransportDao extends EntityDao {
             if (transport.getTransportNumber() == 0) throw new SQLException("Transport does not exist");
             return transport;
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }

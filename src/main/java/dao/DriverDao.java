@@ -27,7 +27,6 @@ public class DriverDao extends EntityDao {
             preparedStatement.execute();
             log.info("Driver add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -45,7 +44,6 @@ public class DriverDao extends EntityDao {
             preparedStatement.execute();
             log.info("Driver update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -59,7 +57,6 @@ public class DriverDao extends EntityDao {
             preparedStatement.execute();
             log.info("Driver remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -85,7 +82,6 @@ public class DriverDao extends EntityDao {
             if (driver.getLicense() == 0) throw new SQLException("Driver does not exist");
             return driver;
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }

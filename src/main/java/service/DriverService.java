@@ -1,44 +1,33 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DriverDao;
 import entity.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 public class DriverService {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private static final Logger log = LoggerFactory.getLogger(DriverService.class);
-    private DriverDao driverDao;
+    private DriverDao driverDao = new DriverDao();
 
-    public void setDriverDao(DriverDao driverDao) {
+    void setDriverDao(DriverDao driverDao) {
         this.driverDao = driverDao;
     }
 
-    public String addDriver(String input) {
+    public void addDriver(Driver driver) throws SQLException {
         try {
-            Driver driver = new ObjectMapper().setDateFormat(df).readValue(input, Driver.class);
             driverDao.addDriver(driver);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String updateDriver(String input) {
+    public void updateDriver(Driver inputDriver) throws SQLException {
         try {
-            Driver inputDriver = new ObjectMapper().setDateFormat(df).readValue(input, Driver.class);
             Driver outputDriver = driverDao.getDriver(inputDriver.getLicense());
             if (inputDriver.equals(outputDriver)) throw new SQLException("Same values");
             if (!(inputDriver.getFio().equals("default"))) outputDriver.setFio(inputDriver.getFio());
@@ -47,34 +36,28 @@ public class DriverService {
             if (!(inputDriver.getBirthDate().equals(Date.valueOf(LocalDate.of(1900, 1, 1)))))
                 outputDriver.setBirthDate(inputDriver.getBirthDate());
             driverDao.updateDriver(outputDriver);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (IOException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String removeDriver(int license) {
+    public void removeDriver(int license) throws SQLException {
         try {
             driverDao.getDriver(license);
             driverDao.removeDriver(license);
-            return "Success";
         } catch (SQLException e) {
-            return e.getMessage();
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public String getDriver(int license) {
+    public Driver getDriver(int license) throws SQLException {
         try {
-            Driver driver = driverDao.getDriver(license);
-            return new ObjectMapper().setDateFormat(df).writeValueAsString(driver);
+            return driverDao.getDriver(license);
         } catch (SQLException e) {
-            return e.getMessage();
-        } catch (JsonProcessingException e) {
             log.error("Error: ", e);
-            return e.getMessage();
+            throw new SQLException(e.getMessage());
         }
     }
 }

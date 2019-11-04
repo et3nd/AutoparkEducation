@@ -27,7 +27,6 @@ public class RouteDao extends EntityDao {
             preparedStatement.execute();
             log.info("Route add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -45,7 +44,6 @@ public class RouteDao extends EntityDao {
             preparedStatement.execute();
             log.info("Route update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -59,7 +57,6 @@ public class RouteDao extends EntityDao {
             preparedStatement.execute();
             log.info("Route remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -85,7 +82,6 @@ public class RouteDao extends EntityDao {
             if (route.getRouteNumber() == 0) throw new SQLException("Route does not exist");
             return route;
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }

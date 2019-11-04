@@ -25,7 +25,6 @@ public class ScheduleDao extends EntityDao {
             preparedStatement.execute();
             log.info("Schedule add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -41,7 +40,6 @@ public class ScheduleDao extends EntityDao {
             preparedStatement.execute();
             log.info("Schedule update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -55,7 +53,6 @@ public class ScheduleDao extends EntityDao {
             preparedStatement.execute();
             log.info("Schedule remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
@@ -79,7 +76,6 @@ public class ScheduleDao extends EntityDao {
             if (schedule.getId() == 0) throw new SQLException("Schedule does not exist");
             return schedule;
         } catch (SQLException e) {
-            log.error("Error: ", e);
             throw new SQLException(e.getMessage());
         }
     }
