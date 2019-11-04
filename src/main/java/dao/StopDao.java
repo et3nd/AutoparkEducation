@@ -18,31 +18,33 @@ public class StopDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
+            if (stop.getStopName().equals("default")) throw new SQLException("Zero identifier");
             preparedStatement.setString(1, stop.getStopName());
             preparedStatement.setString(2, stop.getDirection());
             preparedStatement.setTime(3, stop.getArrivalTimeOnStop());
             preparedStatement.execute();
             log.info("Stop add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void updateStop(Stop stop) {
+    public void updateStop(Stop stop) throws SQLException {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(UPDATE_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
+            preparedStatement.setString(3, stop.getStopName());
             preparedStatement.setString(1, stop.getDirection());
+            preparedStatement.setTime(2, stop.getArrivalTimeOnStop());
             preparedStatement.execute();
             log.info("Stop update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void removeStop(String stopName) {
+    public void removeStop(String stopName) throws SQLException {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(REMOVE_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -51,11 +53,11 @@ public class StopDao extends EntityDao {
             preparedStatement.execute();
             log.info("Stop remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public Stop getStop(String stopName) {
+    public Stop getStop(String stopName) throws SQLException {
         Stop stop = new Stop();
         String script = getInitializationScript(StopDao.class.getResourceAsStream(GET_STOP_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
@@ -67,16 +69,14 @@ public class StopDao extends EntityDao {
                     stop.setStopName(resultSet.getString("stop_name"));
                     stop.setDirection(resultSet.getString("direction"));
                     stop.setArrivalTimeOnStop(Time.valueOf(String.valueOf(resultSet.getTime("arrival_time_on_stop"))));
-                    log.info("Read: " + stop);
+                    log.info("Read: \n" + stop);
                 }
                 log.info("Stop read was successful");
             }
-            if (stop.getStopName().equals("default"))
-                throw new SQLException("Default stop");
+            if (stop.getStopName().equals("default")) throw new SQLException("Stop does not exist");
             return stop;
         } catch (SQLException e) {
-            log.error("Error: ", e);
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 }

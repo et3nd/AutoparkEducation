@@ -35,9 +35,9 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return id + " "
-                + departureTime + " "
-                + arrivalTime;
+        return String.format("%-3s %15s %20s\n", "ID", "Время прибытия", "Время отправления")
+                + "\n"
+                + String.format("%-3s %15s %20s\n", id, departureTime, arrivalTime);
     }
 
     @Override

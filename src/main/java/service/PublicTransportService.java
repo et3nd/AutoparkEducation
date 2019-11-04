@@ -7,31 +7,54 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-class PublicTransportService {
+public class PublicTransportService {
     private static final Logger log = LoggerFactory.getLogger(PublicTransportService.class);
-    private PublicTransportDao publicTransportDao;
+    private PublicTransportDao publicTransportDao = new PublicTransportDao();
 
     void setPublicTransportDao(PublicTransportDao publicTransportDao) {
         this.publicTransportDao = publicTransportDao;
     }
 
-    void addPublicTransport(PublicTransport transport) {
+    public void addPublicTransport(PublicTransport transport) throws SQLException {
         try {
             publicTransportDao.addPublicTransport(transport);
         } catch (SQLException e) {
-            log.error("This value of transport number is used");
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    void updatePublicTransport(PublicTransport transport) {
-        publicTransportDao.updatePublicTransport(transport);
+    public void updatePublicTransport(PublicTransport inputTransport) throws SQLException {
+        try {
+            PublicTransport outputTransport = publicTransportDao.getPublicTransport(inputTransport.getTransportNumber());
+            if (inputTransport.equals(outputTransport)) throw new SQLException("Same values");
+            if (!(inputTransport.getBusBrand().equals("default")))
+                outputTransport.setBusBrand(inputTransport.getBusBrand());
+            if (!(inputTransport.getCapacity() == 0)) outputTransport.setCapacity(inputTransport.getCapacity());
+            if (!(inputTransport.getIssueYear() == 0)) outputTransport.setIssueYear(inputTransport.getIssueYear());
+            publicTransportDao.updatePublicTransport(outputTransport);
+        } catch (SQLException e) {
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
+        }
     }
 
-    void removePublicTransport(int transportNumber) {
-        publicTransportDao.removePublicTransport(transportNumber);
+    public void removePublicTransport(int transportNumber) throws SQLException {
+        try {
+            publicTransportDao.getPublicTransport(transportNumber);
+            publicTransportDao.removePublicTransport(transportNumber);
+        } catch (SQLException e) {
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
+        }
     }
 
-    PublicTransport getPublicTransport(int transportNumber) {
-        return publicTransportDao.getPublicTransport(transportNumber);
+    public PublicTransport getPublicTransport(int transportNumber) throws SQLException {
+        try {
+            return publicTransportDao.getPublicTransport(transportNumber);
+        } catch (SQLException e) {
+            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
+        }
     }
 }

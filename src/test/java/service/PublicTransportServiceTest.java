@@ -11,11 +11,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PublicTransportServiceTest {
     private PublicTransportService publicTransportService = new PublicTransportService();
+    private PublicTransport transport = new PublicTransport();
 
     @Mock
     private PublicTransportDao publicTransportDao;
@@ -23,40 +25,52 @@ class PublicTransportServiceTest {
     @BeforeEach
     void setPublicTransportDao() {
         publicTransportService.setPublicTransportDao(publicTransportDao);
+        transport.setTransportNumber(1);
     }
 
     @Test
-    void getPublicTransport() {
-        doReturn(new PublicTransport()).when(publicTransportDao).getPublicTransport(0);
-        assertEquals(new PublicTransport(), publicTransportService.getPublicTransport(0));
-        verify(publicTransportDao).getPublicTransport(0);
+    void getPublicTransport() throws SQLException {
+        doReturn(transport).when(publicTransportDao).getPublicTransport(transport.getTransportNumber());
+        assertEquals(transport, publicTransportService.getPublicTransport(transport.getTransportNumber()));
+        verify(publicTransportDao).getPublicTransport(transport.getTransportNumber());
+    }
+
+    @Test
+    void getTransportWithException() throws SQLException {
+        doThrow(SQLException.class).when(publicTransportDao).getPublicTransport(transport.getTransportNumber());
+        assertThrows(SQLException.class, () -> publicTransportService.getPublicTransport(transport.getTransportNumber()));
+        verify(publicTransportDao).getPublicTransport(transport.getTransportNumber());
     }
 
     @Test
     void addPublicTransport() throws SQLException {
-        doNothing().when(publicTransportDao).addPublicTransport(new PublicTransport());
-        publicTransportService.addPublicTransport(new PublicTransport());
-        verify(publicTransportDao).addPublicTransport(new PublicTransport());
+        doNothing().when(publicTransportDao).addPublicTransport(transport);
+        publicTransportService.addPublicTransport(transport);
+        verify(publicTransportDao).addPublicTransport(transport);
     }
 
     @Test
     void addTransportWithException() throws SQLException {
-        doThrow(SQLException.class).when(publicTransportDao).addPublicTransport(new PublicTransport());
-        publicTransportService.addPublicTransport(new PublicTransport());
-        verify(publicTransportDao).addPublicTransport(new PublicTransport());
+        doThrow(SQLException.class).when(publicTransportDao).addPublicTransport(transport);
+        assertThrows(SQLException.class, () -> publicTransportService.addPublicTransport(transport));
+        verify(publicTransportDao).addPublicTransport(transport);
     }
 
     @Test
-    void updatePublicTransport() {
-        doNothing().when(publicTransportDao).updatePublicTransport(new PublicTransport());
-        publicTransportService.updatePublicTransport(new PublicTransport());
-        verify(publicTransportDao).updatePublicTransport(new PublicTransport());
+    void updatePublicTransport() throws SQLException {
+        PublicTransport outputTransport = new PublicTransport();
+        outputTransport.setTransportNumber(1);
+        outputTransport.setIssueYear(2000);
+        doNothing().when(publicTransportDao).updatePublicTransport(outputTransport);
+        doReturn(transport).when(publicTransportDao).getPublicTransport(transport.getTransportNumber());
+        publicTransportService.updatePublicTransport(outputTransport);
+        verify(publicTransportDao).updatePublicTransport(outputTransport);
     }
 
     @Test
-    void removePublicTransport() {
-        doNothing().when(publicTransportDao).removePublicTransport(0);
-        publicTransportService.removePublicTransport(0);
-        verify(publicTransportDao).removePublicTransport(0);
+    void removePublicTransport() throws SQLException {
+        doNothing().when(publicTransportDao).removePublicTransport(transport.getTransportNumber());
+        publicTransportService.removePublicTransport(transport.getTransportNumber());
+        verify(publicTransportDao).removePublicTransport(transport.getTransportNumber());
     }
 }

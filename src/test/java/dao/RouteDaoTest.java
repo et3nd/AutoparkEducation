@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RouteDaoTest {
     private RouteDao routeDao = new RouteDao();
@@ -24,9 +25,9 @@ class RouteDaoTest {
     }
 
     @Test
-    void getRoute() {
+    void getRoute() throws SQLException {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
-        assertNull(routeDao.getRoute(2));
+        assertThrows(SQLException.class, () -> routeDao.getRoute(2));
     }
 
     @Test
@@ -38,13 +39,13 @@ class RouteDaoTest {
     }
 
     @Test
-    void addRouteWithUsedValue() {
+    void addRouteWithUsedValue() throws SQLException {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
         assertThrows(SQLException.class, () -> routeDao.addRoute(route));
     }
 
     @Test
-    void updateRoute() {
+    void updateRoute() throws SQLException {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
         route.setStops("New");
         routeDao.updateRoute(route);
@@ -52,14 +53,14 @@ class RouteDaoTest {
     }
 
     @Test
-    void removeRoute() {
+    void removeRoute() throws SQLException {
         assertEquals(route, routeDao.getRoute(route.getRouteNumber()));
         routeDao.removeRoute(route.getRouteNumber());
-        assertNull(routeDao.getRoute(route.getRouteNumber()));
+        assertThrows(SQLException.class, () -> routeDao.getRoute(route.getRouteNumber()));
     }
 
     @AfterEach
-    void remove() {
+    void remove() throws SQLException {
         routeDao.removeRoute(route.getRouteNumber());
         routeDao.removeRoute(10);
     }

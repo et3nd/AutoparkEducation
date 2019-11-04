@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PublicTransportDaoTest {
     private PublicTransportDao publicTransportDao = new PublicTransportDao();
@@ -23,9 +24,9 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void getPublicTransport() {
+    void getPublicTransport() throws SQLException {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
-        assertNull(publicTransportDao.getPublicTransport(2));
+        assertThrows(SQLException.class, () -> publicTransportDao.getPublicTransport(2));
     }
 
     @Test
@@ -37,13 +38,13 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void addTransportWithUsedValue() {
+    void addTransportWithUsedValue() throws SQLException {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         assertThrows(SQLException.class, () -> publicTransportDao.addPublicTransport(transport));
     }
 
     @Test
-    void updatePublicTransport() {
+    void updatePublicTransport() throws SQLException {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         transport.setCapacity(99);
         publicTransportDao.updatePublicTransport(transport);
@@ -51,14 +52,14 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void removePublicTransport() {
+    void removePublicTransport() throws SQLException {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
-        assertNull(publicTransportDao.getPublicTransport(transport.getTransportNumber()));
+        assertThrows(SQLException.class, () -> publicTransportDao.getPublicTransport(transport.getTransportNumber()));
     }
 
     @AfterEach
-    void remove() {
+    void remove() throws SQLException {
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
         publicTransportDao.removePublicTransport(10);
     }

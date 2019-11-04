@@ -18,6 +18,7 @@ public class RouteDao extends EntityDao {
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
+            if (route.getRouteNumber() == 0) throw new SQLException("Zero identifier");
             preparedStatement.setInt(1, route.getRouteNumber());
             preparedStatement.setString(2, route.getStartStation());
             preparedStatement.setString(3, route.getEndStation());
@@ -26,25 +27,28 @@ public class RouteDao extends EntityDao {
             preparedStatement.execute();
             log.info("Route add was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void updateRoute(Route route) {
+    public void updateRoute(Route route) throws SQLException {
         String script = getInitializationScript(RouteDao.class.getResourceAsStream(UPDATE_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
             log.info("Connection to the database was successful");
-            preparedStatement.setString(1, route.getStops());
+            preparedStatement.setInt(5, route.getRouteNumber());
+            preparedStatement.setString(1, route.getStartStation());
+            preparedStatement.setString(2, route.getEndStation());
+            preparedStatement.setString(3, route.getStops());
+            preparedStatement.setInt(4, route.getDistance());
             preparedStatement.execute();
             log.info("Route update was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public void removeRoute(int routeNumber) {
+    public void removeRoute(int routeNumber) throws SQLException {
         String script = getInitializationScript(RouteDao.class.getResourceAsStream(REMOVE_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(script)) {
@@ -53,11 +57,11 @@ public class RouteDao extends EntityDao {
             preparedStatement.execute();
             log.info("Route remove was successful");
         } catch (SQLException e) {
-            log.error("Error: ", e);
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public Route getRoute(int routeNumber) {
+    public Route getRoute(int routeNumber) throws SQLException {
         Route route = new Route();
         String script = getInitializationScript(RouteDao.class.getResourceAsStream(GET_ROUTE_SCRIPT));
         try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
@@ -71,16 +75,14 @@ public class RouteDao extends EntityDao {
                     route.setEndStation(resultSet.getString("end_station"));
                     route.setStops(resultSet.getString("stops"));
                     route.setDistance(resultSet.getInt("distance"));
-                    log.info("Read: " + route);
+                    log.info("Read: \n" + route);
                 }
                 log.info("Route read was successful");
             }
-            if (route.getRouteNumber() == 0)
-                throw new SQLException("Default route");
+            if (route.getRouteNumber() == 0) throw new SQLException("Route does not exist");
             return route;
         } catch (SQLException e) {
-            log.error("Error: ", e);
-            return null;
+            throw new SQLException(e.getMessage());
         }
     }
 }
