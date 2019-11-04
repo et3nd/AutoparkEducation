@@ -10,16 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.ScheduleService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleControllerTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private ScheduleController scheduleController = new ScheduleController();
     private Schedule schedule = new Schedule();
 
@@ -27,38 +23,64 @@ class ScheduleControllerTest {
     private ScheduleService scheduleService;
 
     @BeforeEach
-    void set() {
+    void setScheduleService() {
         scheduleController.setScheduleService(scheduleService);
         schedule.setId(1);
     }
 
     @Test
-    void getSchedule() throws JsonProcessingException {
-        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule)).when(scheduleService).getSchedule(schedule.getId());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule), scheduleController.getSchedule(schedule.getId()));
+    void getSchedule() throws SQLException {
+        doReturn(schedule).when(scheduleService).getSchedule(schedule.getId());
+        scheduleController.getSchedule(schedule.getId());
         verify(scheduleService).getSchedule(schedule.getId());
     }
 
     @Test
-    void removeSchedule() {
-        doReturn("Success").when(scheduleService).removeSchedule(schedule.getId());
+    void getScheduleWithException() throws SQLException {
+        doThrow(SQLException.class).when(scheduleService).getSchedule(schedule.getId());
+        scheduleController.getSchedule(schedule.getId());
+        verify(scheduleService).getSchedule(schedule.getId());
+    }
+
+    @Test
+    void removeSchedule() throws SQLException {
+        doNothing().when(scheduleService).removeSchedule(schedule.getId());
         scheduleController.removeSchedule(schedule.getId());
         verify(scheduleService).removeSchedule(schedule.getId());
     }
 
     @Test
-    void addSchedule() throws JsonProcessingException {
-        doReturn("Success").when(scheduleService)
-                .addSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
-        scheduleController.addSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
-        verify(scheduleService).addSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
+    void removeScheduleWithException() throws SQLException {
+        doThrow(SQLException.class).when(scheduleService).removeSchedule(schedule.getId());
+        scheduleController.removeSchedule(schedule.getId());
+        verify(scheduleService).removeSchedule(schedule.getId());
     }
 
     @Test
-    void updateSchedule() throws JsonProcessingException {
-        doReturn("Success").when(scheduleService)
-                .updateSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
-        scheduleController.updateSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
-        verify(scheduleService).updateSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
+    void addSchedule() throws JsonProcessingException, SQLException {
+        doNothing().when(scheduleService).addSchedule(schedule);
+        scheduleController.addSchedule(new ObjectMapper().writeValueAsString(schedule));
+        verify(scheduleService).addSchedule(schedule);
+    }
+
+    @Test
+    void addScheduleWithException() throws SQLException, JsonProcessingException {
+        doThrow(SQLException.class).when(scheduleService).addSchedule(schedule);
+        scheduleController.addSchedule(new ObjectMapper().writeValueAsString(schedule));
+        verify(scheduleService).addSchedule(schedule);
+    }
+
+    @Test
+    void updateSchedule() throws JsonProcessingException, SQLException {
+        doNothing().when(scheduleService).updateSchedule(schedule);
+        scheduleController.updateSchedule(new ObjectMapper().writeValueAsString(schedule));
+        verify(scheduleService).updateSchedule(schedule);
+    }
+
+    @Test
+    void updateScheduleWithException() throws JsonProcessingException, SQLException {
+        doThrow(new SQLException("Same values")).when(scheduleService).updateSchedule(schedule);
+        scheduleController.updateSchedule(new ObjectMapper().writeValueAsString(schedule));
+        verify(scheduleService).updateSchedule(schedule);
     }
 }

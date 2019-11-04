@@ -10,16 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.RouteService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RouteControllerTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private RouteController routeController = new RouteController();
     private Route route = new Route();
 
@@ -27,36 +23,64 @@ class RouteControllerTest {
     private RouteService routeService;
 
     @BeforeEach
-    void set() {
+    void setRouteService() {
         routeController.setRouteService(routeService);
         route.setRouteNumber(1);
     }
 
     @Test
-    void getRoute() throws JsonProcessingException {
-        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(route)).when(routeService).getRoute(route.getRouteNumber());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(route), routeController.getRoute(route.getRouteNumber()));
+    void getRoute() throws SQLException {
+        doReturn(route).when(routeService).getRoute(route.getRouteNumber());
+        routeController.getRoute(route.getRouteNumber());
         verify(routeService).getRoute(route.getRouteNumber());
     }
 
     @Test
-    void removeRoute() {
-        doReturn("Success").when(routeService).removeRoute(route.getRouteNumber());
+    void getRouteWithException() throws SQLException {
+        doThrow(SQLException.class).when(routeService).getRoute(route.getRouteNumber());
+        routeController.getRoute(route.getRouteNumber());
+        verify(routeService).getRoute(route.getRouteNumber());
+    }
+
+    @Test
+    void removeRoute() throws SQLException {
+        doNothing().when(routeService).removeRoute(route.getRouteNumber());
         routeController.removeRoute(route.getRouteNumber());
         verify(routeService).removeRoute(route.getRouteNumber());
     }
 
     @Test
-    void addRoute() throws JsonProcessingException {
-        doReturn("Success").when(routeService).addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        routeController.addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        verify(routeService).addRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
+    void removeRouteWithException() throws SQLException {
+        doThrow(SQLException.class).when(routeService).removeRoute(route.getRouteNumber());
+        routeController.removeRoute(route.getRouteNumber());
+        verify(routeService).removeRoute(route.getRouteNumber());
     }
 
     @Test
-    void updateRoute() throws JsonProcessingException {
-        doReturn("Success").when(routeService).updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        routeController.updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
-        verify(routeService).updateRoute(new ObjectMapper().setDateFormat(df).writeValueAsString(route));
+    void addRoute() throws JsonProcessingException, SQLException {
+        doNothing().when(routeService).addRoute(route);
+        routeController.addRoute(new ObjectMapper().writeValueAsString(route));
+        verify(routeService).addRoute(route);
+    }
+
+    @Test
+    void addRouteWithException() throws SQLException, JsonProcessingException {
+        doThrow(SQLException.class).when(routeService).addRoute(route);
+        routeController.addRoute(new ObjectMapper().writeValueAsString(route));
+        verify(routeService).addRoute(route);
+    }
+
+    @Test
+    void updateRoute() throws JsonProcessingException, SQLException {
+        doNothing().when(routeService).updateRoute(route);
+        routeController.updateRoute(new ObjectMapper().writeValueAsString(route));
+        verify(routeService).updateRoute(route);
+    }
+
+    @Test
+    void updateRouteWithException() throws JsonProcessingException, SQLException {
+        doThrow(new SQLException("Same values")).when(routeService).updateRoute(route);
+        routeController.updateRoute(new ObjectMapper().writeValueAsString(route));
+        verify(routeService).updateRoute(route);
     }
 }

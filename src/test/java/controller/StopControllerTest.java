@@ -10,16 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.StopService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StopControllerTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private StopController stopController = new StopController();
     private Stop stop = new Stop();
 
@@ -33,30 +29,58 @@ class StopControllerTest {
     }
 
     @Test
-    void getStop() throws JsonProcessingException {
-        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(stop)).when(stopService).getStop(stop.getStopName());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(stop), stopController.getStop(stop.getStopName()));
+    void getStop() throws SQLException {
+        doReturn(stop).when(stopService).getStop(stop.getStopName());
+        stopController.getStop(stop.getStopName());
         verify(stopService).getStop(stop.getStopName());
     }
 
     @Test
-    void removeStop() {
-        doReturn("Success").when(stopService).removeStop(stop.getStopName());
+    void getStopWithException() throws SQLException {
+        doThrow(SQLException.class).when(stopService).getStop(stop.getStopName());
+        stopController.getStop(stop.getStopName());
+        verify(stopService).getStop(stop.getStopName());
+    }
+
+    @Test
+    void removeStop() throws SQLException {
+        doNothing().when(stopService).removeStop(stop.getStopName());
         stopController.removeStop(stop.getStopName());
         verify(stopService).removeStop(stop.getStopName());
     }
 
     @Test
-    void addStop() throws JsonProcessingException {
-        doReturn("Success").when(stopService).addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        stopController.addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        verify(stopService).addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
+    void removeStopWithException() throws SQLException {
+        doThrow(SQLException.class).when(stopService).removeStop(stop.getStopName());
+        stopController.removeStop(stop.getStopName());
+        verify(stopService).removeStop(stop.getStopName());
     }
 
     @Test
-    void updateStop() throws JsonProcessingException {
-        doReturn("Success").when(stopService).updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        stopController.updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
-        verify(stopService).updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
+    void addStop() throws JsonProcessingException, SQLException {
+        doNothing().when(stopService).addStop(stop);
+        stopController.addStop(new ObjectMapper().writeValueAsString(stop));
+        verify(stopService).addStop(stop);
+    }
+
+    @Test
+    void addStopWithException() throws SQLException, JsonProcessingException {
+        doThrow(SQLException.class).when(stopService).addStop(stop);
+        stopController.addStop(new ObjectMapper().writeValueAsString(stop));
+        verify(stopService).addStop(stop);
+    }
+
+    @Test
+    void updateStop() throws JsonProcessingException, SQLException {
+        doNothing().when(stopService).updateStop(stop);
+        stopController.updateStop(new ObjectMapper().writeValueAsString(stop));
+        verify(stopService).updateStop(stop);
+    }
+
+    @Test
+    void updateStopWithException() throws JsonProcessingException, SQLException {
+        doThrow(new SQLException("Same values")).when(stopService).updateStop(stop);
+        stopController.updateStop(new ObjectMapper().writeValueAsString(stop));
+        verify(stopService).updateStop(stop);
     }
 }

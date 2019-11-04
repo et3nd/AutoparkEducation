@@ -1,7 +1,5 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.StopDao;
 import entity.Stop;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,15 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StopServiceTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private StopService stopService = new StopService();
     private Stop stop = new Stop();
 
@@ -33,34 +29,41 @@ class StopServiceTest {
     }
 
     @Test
-    void getStop() throws SQLException, JsonProcessingException {
+    void getStop() throws SQLException {
         doReturn(stop).when(stopDao).getStop(stop.getStopName());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(stop), stopService.getStop(stop.getStopName()));
+        assertEquals(stop, stopService.getStop(stop.getStopName()));
         verify(stopDao).getStop(stop.getStopName());
     }
 
     @Test
-    void addStop() throws SQLException, JsonProcessingException {
+    void getStopWithException() throws SQLException {
+        doThrow(SQLException.class).when(stopDao).getStop(stop.getStopName());
+        assertThrows(SQLException.class, () -> stopService.getStop(stop.getStopName()));
+        verify(stopDao).getStop(stop.getStopName());
+    }
+
+    @Test
+    void addStop() throws SQLException {
         doNothing().when(stopDao).addStop(stop);
-        stopService.addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
+        stopService.addStop(stop);
         verify(stopDao).addStop(stop);
     }
 
     @Test
-    void addStopWithException() throws SQLException, JsonProcessingException {
+    void addStopWithException() throws SQLException {
         doThrow(SQLException.class).when(stopDao).addStop(stop);
-        stopService.addStop(new ObjectMapper().setDateFormat(df).writeValueAsString(stop));
+        assertThrows(SQLException.class, () -> stopService.addStop(stop));
         verify(stopDao).addStop(stop);
     }
 
     @Test
-    void updateStop() throws SQLException, JsonProcessingException {
+    void updateStop() throws SQLException {
         Stop outputStop = new Stop();
         outputStop.setStopName("Stop");
         outputStop.setDirection("Reverse");
         doNothing().when(stopDao).updateStop(outputStop);
         doReturn(stop).when(stopDao).getStop(stop.getStopName());
-        stopService.updateStop(new ObjectMapper().setDateFormat(df).writeValueAsString(outputStop));
+        stopService.updateStop(outputStop);
         verify(stopDao).updateStop(outputStop);
     }
 

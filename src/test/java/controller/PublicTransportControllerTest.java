@@ -10,16 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.PublicTransportService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PublicTransportControllerTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private PublicTransportController transportController = new PublicTransportController();
     private PublicTransport transport = new PublicTransport();
 
@@ -27,41 +23,64 @@ class PublicTransportControllerTest {
     private PublicTransportService transportService;
 
     @BeforeEach
-    void set() {
+    void setPublicTransportService() {
         transportController.setTransportService(transportService);
         transport.setTransportNumber(1);
     }
 
     @Test
-    void getPublicTransport() throws JsonProcessingException {
-        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(transport)).
-                when(transportService).getPublicTransport(transport.getTransportNumber());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(transport),
-                transportController.getPublicTransport(transport.getTransportNumber()));
+    void getPublicTransport() throws SQLException {
+        doReturn(transport).when(transportService).getPublicTransport(transport.getTransportNumber());
+        transportController.getPublicTransport(transport.getTransportNumber());
         verify(transportService).getPublicTransport(transport.getTransportNumber());
     }
 
     @Test
-    void removePublicTransport() {
-        doReturn("Success").when(transportService).removePublicTransport(transport.getTransportNumber());
+    void getTransportWithException() throws SQLException {
+        doThrow(SQLException.class).when(transportService).getPublicTransport(transport.getTransportNumber());
+        transportController.getPublicTransport(transport.getTransportNumber());
+        verify(transportService).getPublicTransport(transport.getTransportNumber());
+    }
+
+    @Test
+    void removePublicTransport() throws SQLException {
+        doNothing().when(transportService).removePublicTransport(transport.getTransportNumber());
         transportController.removePublicTransport(transport.getTransportNumber());
         verify(transportService).removePublicTransport(transport.getTransportNumber());
     }
 
     @Test
-    void addPublicTransport() throws JsonProcessingException {
-        doReturn("Success").when(transportService).
-                addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        transportController.addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        verify(transportService).addPublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
+    void removeTransportWithException() throws SQLException {
+        doThrow(SQLException.class).when(transportService).removePublicTransport(transport.getTransportNumber());
+        transportController.removePublicTransport(transport.getTransportNumber());
+        verify(transportService).removePublicTransport(transport.getTransportNumber());
     }
 
     @Test
-    void updatePublicTransport() throws JsonProcessingException {
-        doReturn("Success").when(transportService)
-                .updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        transportController.updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
-        verify(transportService)
-                .updatePublicTransport(new ObjectMapper().setDateFormat(df).writeValueAsString(transport));
+    void addPublicTransport() throws JsonProcessingException, SQLException {
+        doNothing().when(transportService).addPublicTransport(transport);
+        transportController.addPublicTransport(new ObjectMapper().writeValueAsString(transport));
+        verify(transportService).addPublicTransport(transport);
+    }
+
+    @Test
+    void addTransportWithException() throws SQLException, JsonProcessingException {
+        doThrow(SQLException.class).when(transportService).addPublicTransport(transport);
+        transportController.addPublicTransport(new ObjectMapper().writeValueAsString(transport));
+        verify(transportService).addPublicTransport(transport);
+    }
+
+    @Test
+    void updatePublicTransport() throws JsonProcessingException, SQLException {
+        doNothing().when(transportService).updatePublicTransport(transport);
+        transportController.updatePublicTransport(new ObjectMapper().writeValueAsString(transport));
+        verify(transportService).updatePublicTransport(transport);
+    }
+
+    @Test
+    void updateTransportWithException() throws JsonProcessingException, SQLException {
+        doThrow(new SQLException("Same values")).when(transportService).updatePublicTransport(transport);
+        transportController.updatePublicTransport(new ObjectMapper().writeValueAsString(transport));
+        verify(transportService).updatePublicTransport(transport);
     }
 }

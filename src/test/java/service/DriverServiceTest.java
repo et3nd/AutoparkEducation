@@ -1,7 +1,5 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DriverDao;
 import entity.Driver;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,15 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DriverServiceTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private DriverService driverService = new DriverService();
     private Driver driver = new Driver();
 
@@ -33,34 +29,41 @@ class DriverServiceTest {
     }
 
     @Test
-    void getDriver() throws SQLException, JsonProcessingException {
+    void getDriver() throws SQLException {
         doReturn(driver).when(driverDao).getDriver(driver.getLicense());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(driver), driverService.getDriver(driver.getLicense()));
+        assertEquals(driver, driverService.getDriver(driver.getLicense()));
         verify(driverDao).getDriver(driver.getLicense());
     }
 
     @Test
-    void addDriver() throws SQLException, JsonProcessingException {
+    void getDriverWithException() throws SQLException {
+        doThrow(SQLException.class).when(driverDao).getDriver(driver.getLicense());
+        assertThrows(SQLException.class, () -> driverService.getDriver(driver.getLicense()));
+        verify(driverDao).getDriver(driver.getLicense());
+    }
+
+    @Test
+    void addDriver() throws SQLException {
         doNothing().when(driverDao).addDriver(driver);
-        driverService.addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
+        driverService.addDriver(driver);
         verify(driverDao).addDriver(driver);
     }
 
     @Test
-    void addDriverWithException() throws SQLException, JsonProcessingException {
+    void addDriverWithException() throws SQLException {
         doThrow(SQLException.class).when(driverDao).addDriver(driver);
-        driverService.addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
+        assertThrows(SQLException.class, () -> driverService.addDriver(driver));
         verify(driverDao).addDriver(driver);
     }
 
     @Test
-    void updateDriver() throws SQLException, JsonProcessingException {
+    void updateDriver() throws SQLException {
         Driver outputDriver = new Driver();
         outputDriver.setLicense(1);
         outputDriver.setSalary(25000);
         doNothing().when(driverDao).updateDriver(outputDriver);
         doReturn(driver).when(driverDao).getDriver(driver.getLicense());
-        driverService.updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(outputDriver));
+        driverService.updateDriver(outputDriver);
         verify(driverDao).updateDriver(outputDriver);
     }
 

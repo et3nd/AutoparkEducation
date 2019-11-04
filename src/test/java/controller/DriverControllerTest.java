@@ -10,16 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.DriverService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DriverControllerTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private DriverController driverController = new DriverController();
     private Driver driver = new Driver();
 
@@ -27,36 +23,64 @@ class DriverControllerTest {
     private DriverService driverService;
 
     @BeforeEach
-    void set() {
+    void setDriverService() {
         driverController.setDriverService(driverService);
         driver.setLicense(1);
     }
 
     @Test
-    void getDriver() throws JsonProcessingException {
-        doReturn(new ObjectMapper().setDateFormat(df).writeValueAsString(driver)).when(driverService).getDriver(driver.getLicense());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(driver), driverController.getDriver(driver.getLicense()));
+    void getDriver() throws SQLException {
+        doReturn(driver).when(driverService).getDriver(driver.getLicense());
+        driverController.getDriver(driver.getLicense());
         verify(driverService).getDriver(driver.getLicense());
     }
 
     @Test
-    void removeDriver() {
-        doReturn("Success").when(driverService).removeDriver(driver.getLicense());
+    void getDriverWithException() throws SQLException {
+        doThrow(SQLException.class).when(driverService).getDriver(driver.getLicense());
+        driverController.getDriver(driver.getLicense());
+        verify(driverService).getDriver(driver.getLicense());
+    }
+
+    @Test
+    void removeDriver() throws SQLException {
+        doNothing().when(driverService).removeDriver(driver.getLicense());
         driverController.removeDriver(driver.getLicense());
         verify(driverService).removeDriver(driver.getLicense());
     }
 
     @Test
-    void addDriver() throws JsonProcessingException {
-        doReturn("Success").when(driverService).addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        driverController.addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        verify(driverService).addDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
+    void removeDriverWithException() throws SQLException {
+        doThrow(SQLException.class).when(driverService).removeDriver(driver.getLicense());
+        driverController.removeDriver(driver.getLicense());
+        verify(driverService).removeDriver(driver.getLicense());
     }
 
     @Test
-    void updateDriver() throws JsonProcessingException {
-        doReturn("Success").when(driverService).updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        driverController.updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
-        verify(driverService).updateDriver(new ObjectMapper().setDateFormat(df).writeValueAsString(driver));
+    void addDriver() throws SQLException, JsonProcessingException {
+        doNothing().when(driverService).addDriver(driver);
+        driverController.addDriver(new ObjectMapper().writeValueAsString(driver));
+        verify(driverService).addDriver(driver);
+    }
+
+    @Test
+    void addDriverWithException() throws SQLException, JsonProcessingException {
+        doThrow(SQLException.class).when(driverService).addDriver(driver);
+        driverController.addDriver(new ObjectMapper().writeValueAsString(driver));
+        verify(driverService).addDriver(driver);
+    }
+
+    @Test
+    void updateDriver() throws JsonProcessingException, SQLException {
+        doNothing().when(driverService).updateDriver(driver);
+        driverController.updateDriver(new ObjectMapper().writeValueAsString(driver));
+        verify(driverService).updateDriver(driver);
+    }
+
+    @Test
+    void updateDriverWithException() throws JsonProcessingException, SQLException {
+        doThrow(new SQLException("Same values")).when(driverService).updateDriver(driver);
+        driverController.updateDriver(new ObjectMapper().writeValueAsString(driver));
+        verify(driverService).updateDriver(driver);
     }
 }

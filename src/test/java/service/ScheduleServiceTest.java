@@ -1,7 +1,5 @@
 package service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.ScheduleDao;
 import entity.Schedule;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,16 +10,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private ScheduleService scheduleService = new ScheduleService();
     private Schedule schedule = new Schedule();
 
@@ -35,34 +31,41 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void getSchedule() throws SQLException, JsonProcessingException {
+    void getSchedule() throws SQLException {
         doReturn(schedule).when(scheduleDao).getSchedule(schedule.getId());
-        assertEquals(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule), scheduleService.getSchedule(schedule.getId()));
+        assertEquals(schedule, scheduleService.getSchedule(schedule.getId()));
         verify(scheduleDao).getSchedule(schedule.getId());
     }
 
     @Test
-    void addSchedule() throws SQLException, JsonProcessingException {
+    void getScheduleWithException() throws SQLException {
+        doThrow(SQLException.class).when(scheduleDao).getSchedule(schedule.getId());
+        assertThrows(SQLException.class, () -> scheduleService.getSchedule(schedule.getId()));
+        verify(scheduleDao).getSchedule(schedule.getId());
+    }
+
+    @Test
+    void addSchedule() throws SQLException {
         doNothing().when(scheduleDao).addSchedule(schedule);
-        scheduleService.addSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
+        scheduleService.addSchedule(schedule);
         verify(scheduleDao).addSchedule(schedule);
     }
 
     @Test
-    void addScheduleWithException() throws SQLException, JsonProcessingException {
+    void addScheduleWithException() throws SQLException {
         doThrow(SQLException.class).when(scheduleDao).addSchedule(schedule);
-        scheduleService.addSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(schedule));
+        assertThrows(SQLException.class, () -> scheduleService.addSchedule(schedule));
         verify(scheduleDao).addSchedule(schedule);
     }
 
     @Test
-    void updateSchedule() throws SQLException, JsonProcessingException {
+    void updateSchedule() throws SQLException {
         Schedule outputSchedule = new Schedule();
         outputSchedule.setId(1);
         outputSchedule.setDepartureTime(Time.valueOf(LocalTime.of(4, 2, 5)));
         doNothing().when(scheduleDao).updateSchedule(outputSchedule);
         doReturn(schedule).when(scheduleDao).getSchedule(schedule.getId());
-        scheduleService.updateSchedule(new ObjectMapper().setDateFormat(df).writeValueAsString(outputSchedule));
+        scheduleService.updateSchedule(outputSchedule);
         verify(scheduleDao).updateSchedule(outputSchedule);
     }
 
