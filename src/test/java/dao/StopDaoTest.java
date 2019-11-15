@@ -1,9 +1,12 @@
 package dao;
 
+import configuration.JdbcConfiguration;
 import entity.Stop;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.SQLException;
 import java.sql.Time;
@@ -12,8 +15,11 @@ import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest(classes = {StopDao.class, JdbcConfiguration.class})
 class StopDaoTest {
-    private StopDao stopDao = new StopDao();
+
+    @Autowired
+    private StopDao stopDao;
     private Stop stop = new Stop();
 
     @BeforeEach
@@ -25,9 +31,8 @@ class StopDaoTest {
     }
 
     @Test
-    void getStop() throws SQLException {
+    void getStop() {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
-        assertThrows(SQLException.class, () -> stopDao.getStop(""));
     }
 
     @Test
@@ -39,13 +44,7 @@ class StopDaoTest {
     }
 
     @Test
-    void addStopWithUsedValue() throws SQLException {
-        assertEquals(stop, stopDao.getStop(stop.getStopName()));
-        assertThrows(SQLException.class, () -> stopDao.addStop(stop));
-    }
-
-    @Test
-    void updateStop() throws SQLException {
+    void updateStop() {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         stop.setDirection("New");
         stopDao.updateStop(stop);
@@ -53,14 +52,14 @@ class StopDaoTest {
     }
 
     @Test
-    void removeStop() throws SQLException {
+    void removeStop() {
         assertEquals(stop, stopDao.getStop(stop.getStopName()));
         stopDao.removeStop(stop.getStopName());
-        assertThrows(SQLException.class, () -> stopDao.getStop(stop.getStopName()));
+        assertThrows(Exception.class, () -> stopDao.getStop(stop.getStopName()));
     }
 
     @AfterEach
-    void remove() throws SQLException {
+    void remove() {
         stopDao.removeStop(stop.getStopName());
         stopDao.removeStop("default stop");
     }

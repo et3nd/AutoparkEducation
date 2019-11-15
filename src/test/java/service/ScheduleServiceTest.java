@@ -4,9 +4,9 @@ import dao.ScheduleDao;
 import entity.Schedule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.SQLException;
 import java.sql.Time;
@@ -16,31 +16,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = ScheduleService.class)
 class ScheduleServiceTest {
-    private ScheduleService scheduleService = new ScheduleService();
+
+    @Autowired
+    private ScheduleService scheduleService;
     private Schedule schedule = new Schedule();
 
-    @Mock
+    @MockBean
     private ScheduleDao scheduleDao;
 
     @BeforeEach
-    void setScheduleDao() {
-        scheduleService.setScheduleDao(scheduleDao);
+    void setId() {
         schedule.setId(1);
     }
 
     @Test
-    void getSchedule() throws SQLException {
+    void getSchedule() {
         doReturn(schedule).when(scheduleDao).getSchedule(schedule.getId());
         assertEquals(schedule, scheduleService.getSchedule(schedule.getId()));
-        verify(scheduleDao).getSchedule(schedule.getId());
-    }
-
-    @Test
-    void getScheduleWithException() throws SQLException {
-        doThrow(SQLException.class).when(scheduleDao).getSchedule(schedule.getId());
-        assertThrows(SQLException.class, () -> scheduleService.getSchedule(schedule.getId()));
         verify(scheduleDao).getSchedule(schedule.getId());
     }
 
@@ -59,7 +53,7 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void updateSchedule() throws SQLException {
+    void updateSchedule() {
         Schedule outputSchedule = new Schedule();
         outputSchedule.setId(1);
         outputSchedule.setDepartureTime(Time.valueOf(LocalTime.of(4, 2, 5)));
@@ -70,7 +64,7 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void removeSchedule() throws SQLException {
+    void removeSchedule() {
         doNothing().when(scheduleDao).removeSchedule(schedule.getId());
         scheduleService.removeSchedule(schedule.getId());
         verify(scheduleDao).removeSchedule(schedule.getId());

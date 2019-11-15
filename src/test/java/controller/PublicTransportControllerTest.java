@@ -1,86 +1,64 @@
 package controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.PublicTransport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import service.PublicTransportService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = PublicTransportController.class)
 class PublicTransportControllerTest {
-    private PublicTransportController transportController = new PublicTransportController();
+
+    @Autowired
+    private PublicTransportController transportController;
     private PublicTransport transport = new PublicTransport();
 
-    @Mock
+    @MockBean
     private PublicTransportService transportService;
 
     @BeforeEach
-    void setPublicTransportService() {
-        transportController.setTransportService(transportService);
+    void setTransportNumber() {
         transport.setTransportNumber(1);
     }
 
     @Test
-    void getPublicTransport() throws SQLException {
+    void getPublicTransport() {
         doReturn(transport).when(transportService).getPublicTransport(transport.getTransportNumber());
         transportController.getPublicTransport(transport.getTransportNumber());
         verify(transportService).getPublicTransport(transport.getTransportNumber());
     }
 
     @Test
-    void getTransportWithException() throws SQLException {
-        doThrow(SQLException.class).when(transportService).getPublicTransport(transport.getTransportNumber());
-        transportController.getPublicTransport(transport.getTransportNumber());
-        verify(transportService).getPublicTransport(transport.getTransportNumber());
-    }
-
-    @Test
-    void removePublicTransport() throws SQLException {
+    void removePublicTransport() {
         doNothing().when(transportService).removePublicTransport(transport.getTransportNumber());
         transportController.removePublicTransport(transport.getTransportNumber());
         verify(transportService).removePublicTransport(transport.getTransportNumber());
     }
 
     @Test
-    void removeTransportWithException() throws SQLException {
-        doThrow(SQLException.class).when(transportService).removePublicTransport(transport.getTransportNumber());
-        transportController.removePublicTransport(transport.getTransportNumber());
-        verify(transportService).removePublicTransport(transport.getTransportNumber());
-    }
-
-    @Test
-    void addPublicTransport() throws JsonProcessingException, SQLException {
+    void addPublicTransport() throws SQLException {
         doNothing().when(transportService).addPublicTransport(transport);
-        transportController.addPublicTransport(new ObjectMapper().writeValueAsString(transport));
+        transportController.addPublicTransport(transport);
         verify(transportService).addPublicTransport(transport);
     }
 
     @Test
-    void addTransportWithException() throws SQLException, JsonProcessingException {
+    void addTransportWithException() throws SQLException {
         doThrow(SQLException.class).when(transportService).addPublicTransport(transport);
-        transportController.addPublicTransport(new ObjectMapper().writeValueAsString(transport));
+        transportController.addPublicTransport(transport);
         verify(transportService).addPublicTransport(transport);
     }
 
     @Test
-    void updatePublicTransport() throws JsonProcessingException, SQLException {
+    void updatePublicTransport() {
         doNothing().when(transportService).updatePublicTransport(transport);
-        transportController.updatePublicTransport(new ObjectMapper().writeValueAsString(transport));
-        verify(transportService).updatePublicTransport(transport);
-    }
-
-    @Test
-    void updateTransportWithException() throws JsonProcessingException, SQLException {
-        doThrow(new SQLException("Same values")).when(transportService).updatePublicTransport(transport);
-        transportController.updatePublicTransport(new ObjectMapper().writeValueAsString(transport));
+        transportController.updatePublicTransport(transport);
         verify(transportService).updatePublicTransport(transport);
     }
 }

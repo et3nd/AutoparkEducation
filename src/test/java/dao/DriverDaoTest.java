@@ -1,9 +1,12 @@
 package dao;
 
+import configuration.JdbcConfiguration;
 import entity.Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -12,8 +15,11 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest(classes = {DriverDao.class, JdbcConfiguration.class})
 class DriverDaoTest {
-    private DriverDao driverDao = new DriverDao();
+
+    @Autowired
+    private DriverDao driverDao;
     private Driver driver = new Driver();
 
     @BeforeEach
@@ -27,9 +33,8 @@ class DriverDaoTest {
     }
 
     @Test
-    void getDriver() throws SQLException {
+    void getDriver() {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
-        assertThrows(SQLException.class, () -> driverDao.getDriver(1));
     }
 
     @Test
@@ -41,13 +46,7 @@ class DriverDaoTest {
     }
 
     @Test
-    void addDriverWithUsedValue() throws SQLException {
-        assertEquals(driver, driverDao.getDriver(driver.getLicense()));
-        assertThrows(SQLException.class, () -> driverDao.addDriver(driver));
-    }
-
-    @Test
-    void updateDriver() throws SQLException {
+    void updateDriver() {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driver.setFio("FIO");
         driverDao.updateDriver(driver);
@@ -55,14 +54,14 @@ class DriverDaoTest {
     }
 
     @Test
-    void removeDriver() throws SQLException {
+    void removeDriver() {
         assertEquals(driver, driverDao.getDriver(driver.getLicense()));
         driverDao.removeDriver(driver.getLicense());
-        assertThrows(SQLException.class, () -> driverDao.getDriver(driver.getLicense()));
+        assertThrows(Exception.class, () -> driverDao.getDriver(driver.getLicense()));
     }
 
     @AfterEach
-    void remove() throws SQLException {
+    void remove() {
         driverDao.removeDriver(driver.getLicense());
         driverDao.removeDriver(9000);
     }

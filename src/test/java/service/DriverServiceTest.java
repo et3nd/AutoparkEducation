@@ -4,9 +4,9 @@ import dao.DriverDao;
 import entity.Driver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.SQLException;
 
@@ -14,31 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = DriverService.class)
 class DriverServiceTest {
-    private DriverService driverService = new DriverService();
+
+    @Autowired
+    private DriverService driverService;
     private Driver driver = new Driver();
 
-    @Mock
+    @MockBean
     private DriverDao driverDao;
 
     @BeforeEach
-    void setDriverDao() {
-        driverService.setDriverDao(driverDao);
+    void setLicense() {
         driver.setLicense(1);
     }
 
     @Test
-    void getDriver() throws SQLException {
+    void getDriver() {
         doReturn(driver).when(driverDao).getDriver(driver.getLicense());
         assertEquals(driver, driverService.getDriver(driver.getLicense()));
-        verify(driverDao).getDriver(driver.getLicense());
-    }
-
-    @Test
-    void getDriverWithException() throws SQLException {
-        doThrow(SQLException.class).when(driverDao).getDriver(driver.getLicense());
-        assertThrows(SQLException.class, () -> driverService.getDriver(driver.getLicense()));
         verify(driverDao).getDriver(driver.getLicense());
     }
 
@@ -57,7 +51,7 @@ class DriverServiceTest {
     }
 
     @Test
-    void updateDriver() throws SQLException {
+    void updateDriver() {
         Driver outputDriver = new Driver();
         outputDriver.setLicense(1);
         outputDriver.setSalary(25000);
@@ -68,7 +62,7 @@ class DriverServiceTest {
     }
 
     @Test
-    void removeDriver() throws SQLException {
+    void removeDriver() {
         doNothing().when(driverDao).removeDriver(driver.getLicense());
         driverService.removeDriver(driver.getLicense());
         verify(driverDao).removeDriver(driver.getLicense());

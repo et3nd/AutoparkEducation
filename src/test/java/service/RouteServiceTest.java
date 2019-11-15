@@ -4,9 +4,9 @@ import dao.RouteDao;
 import entity.Route;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.SQLException;
 
@@ -14,31 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = RouteService.class)
 class RouteServiceTest {
-    private RouteService routeService = new RouteService();
+
+    @Autowired
+    private RouteService routeService;
     private Route route = new Route();
 
-    @Mock
+    @MockBean
     private RouteDao routeDao;
 
     @BeforeEach
-    void setRouteDao() {
-        routeService.setRouteDao(routeDao);
+    void setRouteNumber() {
         route.setRouteNumber(1);
     }
 
     @Test
-    void getRoute() throws SQLException {
+    void getRoute() {
         doReturn(route).when(routeDao).getRoute(route.getRouteNumber());
         assertEquals(route, routeService.getRoute(route.getRouteNumber()));
-        verify(routeDao).getRoute(route.getRouteNumber());
-    }
-
-    @Test
-    void getRouteWithException() throws SQLException {
-        doThrow(SQLException.class).when(routeDao).getRoute(route.getRouteNumber());
-        assertThrows(SQLException.class, () -> routeService.getRoute(route.getRouteNumber()));
         verify(routeDao).getRoute(route.getRouteNumber());
     }
 
@@ -57,7 +51,7 @@ class RouteServiceTest {
     }
 
     @Test
-    void updateRoute() throws SQLException {
+    void updateRoute() {
         Route outputRoute = new Route();
         outputRoute.setRouteNumber(1);
         outputRoute.setDistance(500);
@@ -68,7 +62,7 @@ class RouteServiceTest {
     }
 
     @Test
-    void removeRoute() throws SQLException {
+    void removeRoute() {
         doNothing().when(routeDao).removeRoute(route.getRouteNumber());
         routeService.removeRoute(route.getRouteNumber());
         verify(routeDao).removeRoute(route.getRouteNumber());

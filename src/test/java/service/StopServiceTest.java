@@ -4,9 +4,9 @@ import dao.StopDao;
 import entity.Stop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.SQLException;
 
@@ -14,31 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = StopService.class)
 class StopServiceTest {
-    private StopService stopService = new StopService();
+
+    @Autowired
+    private StopService stopService;
     private Stop stop = new Stop();
 
-    @Mock
+    @MockBean
     private StopDao stopDao;
 
     @BeforeEach
-    void setStopsDao() {
-        stopService.setStopDao(stopDao);
+    void setStopName() {
         stop.setStopName("Stop");
     }
 
     @Test
-    void getStop() throws SQLException {
+    void getStop() {
         doReturn(stop).when(stopDao).getStop(stop.getStopName());
         assertEquals(stop, stopService.getStop(stop.getStopName()));
-        verify(stopDao).getStop(stop.getStopName());
-    }
-
-    @Test
-    void getStopWithException() throws SQLException {
-        doThrow(SQLException.class).when(stopDao).getStop(stop.getStopName());
-        assertThrows(SQLException.class, () -> stopService.getStop(stop.getStopName()));
         verify(stopDao).getStop(stop.getStopName());
     }
 
@@ -57,7 +51,7 @@ class StopServiceTest {
     }
 
     @Test
-    void updateStop() throws SQLException {
+    void updateStop() {
         Stop outputStop = new Stop();
         outputStop.setStopName("Stop");
         outputStop.setDirection("Reverse");
@@ -68,7 +62,7 @@ class StopServiceTest {
     }
 
     @Test
-    void removeStop() throws SQLException {
+    void removeStop() {
         doNothing().when(stopDao).removeStop(stop.getStopName());
         stopService.removeStop(stop.getStopName());
         verify(stopDao).removeStop(stop.getStopName());

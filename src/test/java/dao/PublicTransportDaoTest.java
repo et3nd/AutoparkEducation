@@ -1,17 +1,23 @@
 package dao;
 
+import configuration.JdbcConfiguration;
 import entity.PublicTransport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest(classes = {PublicTransportDao.class, JdbcConfiguration.class})
 class PublicTransportDaoTest {
-    private PublicTransportDao publicTransportDao = new PublicTransportDao();
+
+    @Autowired
+    private PublicTransportDao publicTransportDao;
     private PublicTransport transport = new PublicTransport();
 
     @BeforeEach
@@ -24,9 +30,8 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void getPublicTransport() throws SQLException {
+    void getPublicTransport() {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
-        assertThrows(SQLException.class, () -> publicTransportDao.getPublicTransport(2));
     }
 
     @Test
@@ -38,13 +43,7 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void addTransportWithUsedValue() throws SQLException {
-        assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
-        assertThrows(SQLException.class, () -> publicTransportDao.addPublicTransport(transport));
-    }
-
-    @Test
-    void updatePublicTransport() throws SQLException {
+    void updatePublicTransport() {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         transport.setCapacity(99);
         publicTransportDao.updatePublicTransport(transport);
@@ -52,14 +51,14 @@ class PublicTransportDaoTest {
     }
 
     @Test
-    void removePublicTransport() throws SQLException {
+    void removePublicTransport() {
         assertEquals(transport, publicTransportDao.getPublicTransport(transport.getTransportNumber()));
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
-        assertThrows(SQLException.class, () -> publicTransportDao.getPublicTransport(transport.getTransportNumber()));
+        assertThrows(Exception.class, () -> publicTransportDao.getPublicTransport(transport.getTransportNumber()));
     }
 
     @AfterEach
-    void remove() throws SQLException {
+    void remove() {
         publicTransportDao.removePublicTransport(transport.getTransportNumber());
         publicTransportDao.removePublicTransport(10);
     }
