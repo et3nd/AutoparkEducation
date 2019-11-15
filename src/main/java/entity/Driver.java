@@ -67,7 +67,7 @@ public class Driver {
                 salary == driver.salary &&
                 Objects.equals(fio, driver.fio) &&
                 Objects.equals(address, driver.address) &&
-                Objects.equals(birthDate, driver.birthDate);
+                Objects.equals(String.valueOf(birthDate), String.valueOf(driver.birthDate));
     }
 
     @Override
