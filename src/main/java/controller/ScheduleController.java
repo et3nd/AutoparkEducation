@@ -1,82 +1,49 @@
 package controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Schedule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import service.ScheduleService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.sql.SQLException;
 
-@Path("/schedule")
+@Controller
+@RequestMapping(value = "/schedule", produces = "application/json")
 public class ScheduleController {
-    private ScheduleService scheduleService = new ScheduleService();
-    private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
+    private ScheduleService scheduleService;
 
-    void setScheduleService(ScheduleService scheduleService) {
+    @Autowired
+    public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
 
-    @Path("/add")
-    @POST
-    @Produces("application/json")
-    public Response addSchedule(String input) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
         try {
-            scheduleService.addSchedule(new ObjectMapper().readValue(input, Schedule.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
+            scheduleService.addSchedule(schedule);
+            return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
         } catch (SQLException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Unique index violation or zero identifier\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
+            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Path("/update")
-    @PUT
-    @Produces("application/json")
-    public Response updateSchedule(String input) {
-        try {
-            scheduleService.updateSchedule(new ObjectMapper().readValue(input, Schedule.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            if (e.getMessage().equals("Same values"))
-                return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-            else
-                return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @PutMapping("/update")
+    public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+        scheduleService.updateSchedule(schedule);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{id}")
-    @DELETE
-    @Produces("application/json")
-    public Response removeSchedule(@PathParam("id") int id) {
-        try {
-            scheduleService.removeSchedule(id);
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> removeSchedule(@PathVariable int id) {
+        scheduleService.removeSchedule(id);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{id}")
-    @GET
-    @Produces("application/json")
-    public Response getSchedule(@PathParam("id") int id) {
-        try {
-            String jsonSchedule = new ObjectMapper().writeValueAsString(scheduleService.getSchedule(id));
-            return Response.status(Response.Status.OK).entity(jsonSchedule).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (JsonProcessingException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<Schedule> getSchedule(@PathVariable int id) {
+        return new ResponseEntity<>(scheduleService.getSchedule(id), HttpStatus.OK);
     }
 }

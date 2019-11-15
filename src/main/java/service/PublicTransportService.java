@@ -4,14 +4,18 @@ import dao.PublicTransportDao;
 import entity.PublicTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
+@Service
 public class PublicTransportService {
     private static final Logger log = LoggerFactory.getLogger(PublicTransportService.class);
-    private PublicTransportDao publicTransportDao = new PublicTransportDao();
+    private PublicTransportDao publicTransportDao;
 
-    void setPublicTransportDao(PublicTransportDao publicTransportDao) {
+    @Autowired
+    public PublicTransportService(PublicTransportDao publicTransportDao) {
         this.publicTransportDao = publicTransportDao;
     }
 
@@ -24,37 +28,21 @@ public class PublicTransportService {
         }
     }
 
-    public void updatePublicTransport(PublicTransport inputTransport) throws SQLException {
-        try {
-            PublicTransport outputTransport = publicTransportDao.getPublicTransport(inputTransport.getTransportNumber());
-            if (inputTransport.equals(outputTransport)) throw new SQLException("Same values");
-            if (!(inputTransport.getBusBrand().equals("default")))
-                outputTransport.setBusBrand(inputTransport.getBusBrand());
-            if (!(inputTransport.getCapacity() == 0)) outputTransport.setCapacity(inputTransport.getCapacity());
-            if (!(inputTransport.getIssueYear() == 0)) outputTransport.setIssueYear(inputTransport.getIssueYear());
-            publicTransportDao.updatePublicTransport(outputTransport);
-        } catch (SQLException e) {
-            log.error("Error: ", e);
-            throw new SQLException(e.getMessage());
-        }
+    public void updatePublicTransport(PublicTransport inputTransport) {
+        PublicTransport outputTransport = publicTransportDao.getPublicTransport(inputTransport.getTransportNumber());
+        if (!(inputTransport.getBusBrand().equals("default")))
+            outputTransport.setBusBrand(inputTransport.getBusBrand());
+        if (!(inputTransport.getCapacity() == 0)) outputTransport.setCapacity(inputTransport.getCapacity());
+        if (!(inputTransport.getIssueYear() == 0)) outputTransport.setIssueYear(inputTransport.getIssueYear());
+        publicTransportDao.updatePublicTransport(outputTransport);
     }
 
-    public void removePublicTransport(int transportNumber) throws SQLException {
-        try {
-            publicTransportDao.getPublicTransport(transportNumber);
-            publicTransportDao.removePublicTransport(transportNumber);
-        } catch (SQLException e) {
-            log.error("Error: ", e);
-            throw new SQLException(e.getMessage());
-        }
+    public void removePublicTransport(int transportNumber) {
+        publicTransportDao.getPublicTransport(transportNumber);
+        publicTransportDao.removePublicTransport(transportNumber);
     }
 
-    public PublicTransport getPublicTransport(int transportNumber) throws SQLException {
-        try {
-            return publicTransportDao.getPublicTransport(transportNumber);
-        } catch (SQLException e) {
-            log.error("Error: ", e);
-            throw new SQLException(e.getMessage());
-        }
+    public PublicTransport getPublicTransport(int transportNumber) {
+        return publicTransportDao.getPublicTransport(transportNumber);
     }
 }

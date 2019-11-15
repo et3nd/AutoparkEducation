@@ -10,9 +10,6 @@ import java.io.InputStreamReader;
 
 abstract class EntityDao {
     private static final Logger log = LoggerFactory.getLogger(EntityDao.class);
-    static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
-    static final String LOGIN = "root";
-    static final String PASSWORD = "root";
 
     String getInitializationScript(InputStream stream) {
         StringBuilder sqlScript = new StringBuilder();

@@ -1,82 +1,49 @@
 package controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Route;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import service.RouteService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.sql.SQLException;
 
-@Path("/route")
+@Controller
+@RequestMapping(value = "/route", produces = "application/json")
 public class RouteController {
-    private RouteService routeService = new RouteService();
-    private static final Logger log = LoggerFactory.getLogger(RouteController.class);
+    private RouteService routeService;
 
-    void setRouteService(RouteService routeService) {
+    @Autowired
+    public RouteController(RouteService routeService) {
         this.routeService = routeService;
     }
 
-    @Path("/add")
-    @POST
-    @Produces("application/json")
-    public Response addRoute(String input) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addRoute(@RequestBody Route route) {
         try {
-            routeService.addRoute(new ObjectMapper().readValue(input, Route.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
+            routeService.addRoute(route);
+            return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
         } catch (SQLException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Unique index violation or zero identifier\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
+            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Path("/update")
-    @PUT
-    @Produces("application/json")
-    public Response updateRoute(String input) {
-        try {
-            routeService.updateRoute(new ObjectMapper().readValue(input, Route.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            if (e.getMessage().equals("Same values"))
-                return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-            else
-                return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @PutMapping("/update")
+    public ResponseEntity<String> updateRoute(@RequestBody Route route) {
+        routeService.updateRoute(route);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{routeNumber}")
-    @DELETE
-    @Produces("application/json")
-    public Response removeRoute(@PathParam("routeNumber") int routeNumber) {
-        try {
-            routeService.removeRoute(routeNumber);
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        }
+    @DeleteMapping("/{routeNumber}")
+    public ResponseEntity<String> removeRoute(@PathVariable int routeNumber) {
+        routeService.removeRoute(routeNumber);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{routeNumber}")
-    @GET
-    @Produces("application/json")
-    public Response getRoute(@PathParam("routeNumber") int routeNumber) {
-        try {
-            String jsonRoute = new ObjectMapper().writeValueAsString(routeService.getRoute(routeNumber));
-            return Response.status(Response.Status.OK).entity(jsonRoute).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (JsonProcessingException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @GetMapping("/{routeNumber}")
+    public ResponseEntity<Route> getRoute(@PathVariable int routeNumber) {
+        return new ResponseEntity<>(routeService.getRoute(routeNumber), HttpStatus.OK);
     }
 }

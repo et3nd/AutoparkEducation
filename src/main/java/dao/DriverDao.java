@@ -3,86 +3,70 @@ package dao;
 import entity.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.SQLException;
 
+@Repository
 public class DriverDao extends EntityDao {
+    private final JdbcTemplate jdbcTemplate;
     private static final Logger log = LoggerFactory.getLogger(DriverDao.class);
     private static final String ADD_DRIVER_SCRIPT = "/db/add-driver-script.sql";
     private static final String UPDATE_DRIVER_SCRIPT = "/db/update-driver-script.sql";
     private static final String REMOVE_DRIVER_SCRIPT = "/db/remove-driver-script.sql";
     private static final String GET_DRIVER_SCRIPT = "/db/get-driver-script.sql";
 
+    @Autowired
+    public DriverDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public void addDriver(Driver driver) throws SQLException {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(ADD_DRIVER_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
+        try {
             log.info("Connection to the database was successful");
             if (driver.getLicense() == 0) throw new SQLException("Zero identifier");
-            preparedStatement.setInt(1, driver.getLicense());
-            preparedStatement.setString(2, driver.getFio());
-            preparedStatement.setInt(3, driver.getSalary());
-            preparedStatement.setString(4, driver.getAddress());
-            preparedStatement.setDate(5, driver.getBirthDate());
-            preparedStatement.execute();
+            jdbcTemplate.update(script,
+                    driver.getLicense(),
+                    driver.getFio(),
+                    driver.getSalary(),
+                    driver.getAddress(),
+                    driver.getBirthDate());
             log.info("Driver add was successful");
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         }
     }
 
-    public void updateDriver(Driver driver) throws SQLException {
+    public void updateDriver(Driver driver) {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(UPDATE_DRIVER_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setInt(5, driver.getLicense());
-            preparedStatement.setString(1, driver.getFio());
-            preparedStatement.setInt(2, driver.getSalary());
-            preparedStatement.setString(3, driver.getAddress());
-            preparedStatement.setDate(4, driver.getBirthDate());
-            preparedStatement.execute();
-            log.info("Driver update was successful");
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        jdbcTemplate.update(script,
+                driver.getFio(),
+                driver.getSalary(),
+                driver.getAddress(),
+                driver.getBirthDate(),
+                driver.getLicense());
+        log.info("Driver update was successful");
     }
 
-    public void removeDriver(int license) throws SQLException {
+    public void removeDriver(int license) {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(REMOVE_DRIVER_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, license);
-            preparedStatement.execute();
-            log.info("Driver remove was successful");
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        jdbcTemplate.update(script, license);
+        log.info("Driver remove was successful");
     }
 
-    public Driver getDriver(int license) throws SQLException {
-        Driver driver = new Driver();
+    public Driver getDriver(int license) {
         String script = getInitializationScript(DriverDao.class.getResourceAsStream(GET_DRIVER_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setInt(1, license);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    driver.setAddress(resultSet.getString("address"));
-                    driver.setFio(resultSet.getString("fio"));
-                    driver.setSalary(resultSet.getInt("salary"));
-                    driver.setLicense(resultSet.getInt("license"));
-                    driver.setBirthDate(Date.valueOf(String.valueOf(resultSet.getDate("birth_date"))));
-                    log.info("Read: \n" + driver.toString());
-                }
-                log.info("Driver read was successful");
-            }
-            if (driver.getLicense() == 0) throw new SQLException("Driver does not exist");
-            return driver;
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        Driver driver = jdbcTemplate.queryForObject(script,
+                new Integer[]{license},
+                new BeanPropertyRowMapper<>(Driver.class));
+        log.info("Read: \n" + driver);
+        return driver;
     }
 }

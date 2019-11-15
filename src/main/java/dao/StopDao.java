@@ -3,80 +3,66 @@ package dao;
 import entity.Stop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.SQLException;
 
+@Repository
 public class StopDao extends EntityDao {
+    private final JdbcTemplate jdbcTemplate;
     private static final Logger log = LoggerFactory.getLogger(StopDao.class);
     private static final String ADD_STOP_SCRIPT = "/db/add-stop-script.sql";
     private static final String UPDATE_STOP_SCRIPT = "/db/update-stop-script.sql";
     private static final String REMOVE_STOP_SCRIPT = "/db/remove-stop-script.sql";
     private static final String GET_STOP_SCRIPT = "/db/get-stop-script.sql";
 
+    @Autowired
+    public StopDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public void addStop(Stop stop) throws SQLException {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(ADD_STOP_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
+        try {
             log.info("Connection to the database was successful");
             if (stop.getStopName().equals("default")) throw new SQLException("Zero identifier");
-            preparedStatement.setString(1, stop.getStopName());
-            preparedStatement.setString(2, stop.getDirection());
-            preparedStatement.setTime(3, stop.getArrivalTimeOnStop());
-            preparedStatement.execute();
+            jdbcTemplate.update(script,
+                    stop.getStopName(),
+                    stop.getDirection(),
+                    stop.getArrivalTimeOnStop());
             log.info("Stop add was successful");
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         }
     }
 
-    public void updateStop(Stop stop) throws SQLException {
+    public void updateStop(Stop stop) {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(UPDATE_STOP_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setString(3, stop.getStopName());
-            preparedStatement.setString(1, stop.getDirection());
-            preparedStatement.setTime(2, stop.getArrivalTimeOnStop());
-            preparedStatement.execute();
-            log.info("Stop update was successful");
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        jdbcTemplate.update(script,
+                stop.getDirection(),
+                stop.getArrivalTimeOnStop(),
+                stop.getStopName());
+        log.info("Stop update was successful");
     }
 
-    public void removeStop(String stopName) throws SQLException {
+    public void removeStop(String stopName) {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(REMOVE_STOP_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setString(1, stopName);
-            preparedStatement.execute();
-            log.info("Stop remove was successful");
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        jdbcTemplate.update(script, stopName);
+        log.info("Stop remove was successful");
     }
 
-    public Stop getStop(String stopName) throws SQLException {
-        Stop stop = new Stop();
+    public Stop getStop(String stopName) {
         String script = getInitializationScript(StopDao.class.getResourceAsStream(GET_STOP_SCRIPT));
-        try (Connection connection = DriverManager.getConnection(URL, LOGIN, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(script)) {
-            log.info("Connection to the database was successful");
-            preparedStatement.setString(1, stopName);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    stop.setStopName(resultSet.getString("stop_name"));
-                    stop.setDirection(resultSet.getString("direction"));
-                    stop.setArrivalTimeOnStop(Time.valueOf(String.valueOf(resultSet.getTime("arrival_time_on_stop"))));
-                    log.info("Read: \n" + stop);
-                }
-                log.info("Stop read was successful");
-            }
-            if (stop.getStopName().equals("default")) throw new SQLException("Stop does not exist");
-            return stop;
-        } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
-        }
+        log.info("Connection to the database was successful");
+        Stop stop = jdbcTemplate.queryForObject(script,
+                new String[]{stopName},
+                new BeanPropertyRowMapper<>(Stop.class));
+        log.info("Read: \n" + stop);
+        return stop;
     }
 }

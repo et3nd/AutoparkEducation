@@ -1,85 +1,52 @@
 package controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Driver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import service.DriverService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-@Path("/driver")
+@Controller
+@RequestMapping(value = "/driver", produces = "application/json")
 public class DriverController {
-    private DriverService driverService = new DriverService();
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static final Logger log = LoggerFactory.getLogger(DriverController.class);
+    private final DriverService driverService;
 
-    void setDriverService(DriverService driverService) {
+    @Autowired
+    public DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
 
-    @Path("/add")
-    @POST
-    @Produces("application/json")
-    public Response addDriver(String input) {
+    @PostMapping("/add")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    public ResponseEntity<String> addDriver(@RequestBody Driver driver) {
         try {
-            driverService.addDriver(new ObjectMapper().setDateFormat(DATE_FORMAT).readValue(input, Driver.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
+            driverService.addDriver(driver);
+            return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
         } catch (SQLException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Unique index violation or zero identifier\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
+            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Path("/update")
-    @PUT
-    @Produces("application/json")
-    public Response updateDriver(String input) {
-        try {
-            driverService.updateDriver(new ObjectMapper().setDateFormat(DATE_FORMAT).readValue(input, Driver.class));
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            if (e.getMessage().equals("Same values"))
-                return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-            else
-                return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (IOException e) {
-            log.error("Error: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @PutMapping("/update")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    public ResponseEntity<String> updateDriver(@RequestBody Driver driver) {
+        driverService.updateDriver(driver);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{license}")
-    @DELETE
-    @Produces("application/json")
-    public Response removeDriver(@PathParam("license") int license) {
-        try {
-            driverService.removeDriver(license);
-            return Response.status(Response.Status.OK).entity("{ \"message\": \"Success\" }").build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        }
+    @DeleteMapping("/{license}")
+    public ResponseEntity<String> removeDriver(@PathVariable int license) {
+        driverService.removeDriver(license);
+        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
     }
 
-    @Path("/{license}")
-    @GET
-    @Produces("application/json")
-    public Response getDriver(@PathParam("license") int license) {
-        try {
-            String jsonDriver = new ObjectMapper().setDateFormat(DATE_FORMAT).writeValueAsString(driverService.getDriver(license));
-            return Response.status(Response.Status.OK).entity(jsonDriver).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("{ \"message\": \"" + e.getMessage() + "\" }").build();
-        } catch (JsonProcessingException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("{ \"message\": \"Syntax error\" }").build();
-        }
+    @GetMapping("/{license}")
+    public ResponseEntity<Driver> getDriver(@PathVariable int license) {
+        return new ResponseEntity<>(driverService.getDriver(license), HttpStatus.OK);
     }
 }
