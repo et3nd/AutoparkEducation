@@ -1,19 +1,19 @@
-package controller;
+package com.education.controller;
 
-import entity.Schedule;
+import com.education.entity.Schedule;
+import com.education.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import service.ScheduleService;
 
 import java.sql.SQLException;
 
-@Controller
+@RestController
 @RequestMapping(value = "/schedule", produces = "application/json")
 public class ScheduleController {
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
+    private ResponseEntity<String> response = new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
 
     @Autowired
     public ScheduleController(ScheduleService scheduleService) {
@@ -24,7 +24,7 @@ public class ScheduleController {
     public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
         try {
             scheduleService.addSchedule(schedule);
-            return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+            return response;
         } catch (SQLException e) {
             return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
         }
@@ -33,13 +33,13 @@ public class ScheduleController {
     @PutMapping("/update")
     public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
         scheduleService.updateSchedule(schedule);
-        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+        return response;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeSchedule(@PathVariable int id) {
         scheduleService.removeSchedule(id);
-        return new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+        return response;
     }
 
     @GetMapping("/{id}")

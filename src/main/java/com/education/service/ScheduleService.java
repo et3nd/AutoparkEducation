@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.ScheduleDao;
-import entity.Schedule;
+import com.education.dao.ScheduleDao;
+import com.education.entity.Schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Service
 public class ScheduleService {
     private static final Logger log = LoggerFactory.getLogger(ScheduleService.class);
-    private ScheduleDao scheduleDao;
+    private final ScheduleDao scheduleDao;
 
     @Autowired
     public ScheduleService(ScheduleDao scheduleDao) {

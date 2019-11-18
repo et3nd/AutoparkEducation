@@ -1,4 +1,4 @@
-package entity;
+package com.education.entity;
 
 import java.sql.Time;
 import java.time.LocalTime;

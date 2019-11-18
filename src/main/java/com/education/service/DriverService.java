@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.DriverDao;
-import entity.Driver;
+import com.education.dao.DriverDao;
+import com.education.entity.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Service
 public class DriverService {
     private static final Logger log = LoggerFactory.getLogger(DriverService.class);
-    private DriverDao driverDao;
+    private final DriverDao driverDao;
 
     @Autowired
     public DriverService(DriverDao driverDao) {

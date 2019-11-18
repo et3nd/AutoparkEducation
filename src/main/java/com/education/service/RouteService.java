@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.RouteDao;
-import entity.Route;
+import com.education.dao.RouteDao;
+import com.education.entity.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @Service
 public class RouteService {
     private static final Logger log = LoggerFactory.getLogger(RouteService.class);
-    private RouteDao routeDao;
+    private final RouteDao routeDao;
 
     @Autowired
     public RouteService(RouteDao routeDao) {

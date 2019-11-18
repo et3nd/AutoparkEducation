@@ -1,6 +1,6 @@
-package dao;
+package com.education.dao;
 
-import entity.Schedule;
+import com.education.entity.Schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
