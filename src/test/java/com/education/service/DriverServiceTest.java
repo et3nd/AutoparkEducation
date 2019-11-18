@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.DriverDao;
-import entity.Driver;
+import com.education.dao.DriverDao;
+import com.education.entity.Driver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = DriverService.class)
+@SpringBootTest
 class DriverServiceTest {
 
     @Autowired

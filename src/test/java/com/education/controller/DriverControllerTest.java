@@ -1,18 +1,18 @@
-package controller;
+package com.education.controller;
 
-import entity.Driver;
+import com.education.entity.Driver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import service.DriverService;
+import com.education.service.DriverService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = DriverController.class)
+@SpringBootTest
 class DriverControllerTest {
 
     @Autowired

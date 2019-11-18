@@ -1,7 +1,6 @@
-package dao;
+package com.education.dao;
 
-import configuration.JdbcConfiguration;
-import entity.PublicTransport;
+import com.education.entity.PublicTransport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(classes = {PublicTransportDao.class, JdbcConfiguration.class})
+@SpringBootTest
 class PublicTransportDaoTest {
 
     @Autowired

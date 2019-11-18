@@ -1,18 +1,18 @@
-package controller;
+package com.education.controller;
 
-import entity.Schedule;
+import com.education.entity.Schedule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import service.ScheduleService;
+import com.education.service.ScheduleService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = ScheduleController.class)
+@SpringBootTest
 class ScheduleControllerTest {
 
     @Autowired

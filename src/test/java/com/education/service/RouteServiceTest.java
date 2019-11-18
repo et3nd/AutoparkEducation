@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.RouteDao;
-import entity.Route;
+import com.education.dao.RouteDao;
+import com.education.entity.Route;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = RouteService.class)
+@SpringBootTest
 class RouteServiceTest {
 
     @Autowired

@@ -1,18 +1,18 @@
-package controller;
+package com.education.controller;
 
-import entity.Stop;
+import com.education.entity.Stop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import service.StopService;
+import com.education.service.StopService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = StopController.class)
+@SpringBootTest
 class StopControllerTest {
 
     @Autowired

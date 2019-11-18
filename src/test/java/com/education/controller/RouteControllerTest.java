@@ -1,18 +1,18 @@
-package controller;
+package com.education.controller;
 
-import entity.Route;
+import com.education.entity.Route;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import service.RouteService;
+import com.education.service.RouteService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = RouteController.class)
+@SpringBootTest
 class RouteControllerTest {
 
     @Autowired

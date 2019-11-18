@@ -1,18 +1,18 @@
-package controller;
+package com.education.controller;
 
-import entity.PublicTransport;
+import com.education.entity.PublicTransport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import service.PublicTransportService;
+import com.education.service.PublicTransportService;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = PublicTransportController.class)
+@SpringBootTest
 class PublicTransportControllerTest {
 
     @Autowired

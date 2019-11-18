@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.ScheduleDao;
-import entity.Schedule;
+import com.education.dao.ScheduleDao;
+import com.education.entity.Schedule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = ScheduleService.class)
+@SpringBootTest
 class ScheduleServiceTest {
 
     @Autowired

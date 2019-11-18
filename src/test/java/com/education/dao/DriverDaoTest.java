@@ -1,7 +1,6 @@
-package dao;
+package com.education.dao;
 
-import configuration.JdbcConfiguration;
-import entity.Driver;
+import com.education.entity.Driver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(classes = {DriverDao.class, JdbcConfiguration.class})
+@SpringBootTest
 class DriverDaoTest {
 
     @Autowired

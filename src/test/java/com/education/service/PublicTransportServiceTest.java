@@ -1,7 +1,7 @@
-package service;
+package com.education.service;
 
-import dao.PublicTransportDao;
-import entity.PublicTransport;
+import com.education.dao.PublicTransportDao;
+import com.education.entity.PublicTransport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = PublicTransportService.class)
+@SpringBootTest
 class PublicTransportServiceTest {
 
     @Autowired
