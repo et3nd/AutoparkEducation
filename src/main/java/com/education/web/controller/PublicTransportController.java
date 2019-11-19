@@ -1,7 +1,8 @@
-package com.education.controller;
+package com.education.web.controller;
 
 import com.education.entity.PublicTransport;
 import com.education.service.PublicTransportService;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +14,35 @@ import java.sql.SQLException;
 @RequestMapping(value = "/transport", produces = "application/json")
 public class PublicTransportController {
     private final PublicTransportService transportService;
-    private ResponseEntity<String> response = new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+    private final Response response;
 
     @Autowired
-    public PublicTransportController(PublicTransportService transportService) {
+    public PublicTransportController(PublicTransportService transportService, Response response) {
         this.transportService = transportService;
+        this.response = response;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addPublicTransport(@RequestBody PublicTransport transport) {
+    public ResponseEntity<Response> addPublicTransport(@RequestBody PublicTransport transport) {
         try {
             transportService.addPublicTransport(transport);
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (SQLException e) {
-            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updatePublicTransport(@RequestBody PublicTransport transport) {
+    public ResponseEntity<Response> updatePublicTransport(@RequestBody PublicTransport transport) {
         transportService.updatePublicTransport(transport);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{transportNumber}")
-    public ResponseEntity<String> removePublicTransport(@PathVariable int transportNumber) {
+    public ResponseEntity<Response> removePublicTransport(@PathVariable int transportNumber) {
         transportService.removePublicTransport(transportNumber);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{transportNumber}")

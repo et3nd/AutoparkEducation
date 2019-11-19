@@ -1,12 +1,13 @@
-package com.education.controller;
+package com.education.web.controller;
 
 import com.education.entity.Driver;
+import com.education.service.DriverService;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.education.service.DriverService;
 
 import java.sql.SQLException;
 
@@ -14,35 +15,37 @@ import java.sql.SQLException;
 @RequestMapping(value = "/driver", produces = "application/json")
 public class DriverController {
     private final DriverService driverService;
-    private ResponseEntity<String> response = new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+    private final Response response;
 
     @Autowired
-    public DriverController(DriverService driverService) {
+    public DriverController(DriverService driverService, Response response) {
         this.driverService = driverService;
+        this.response = response;
     }
 
     @PostMapping("/add")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public ResponseEntity<String> addDriver(@RequestBody Driver driver) {
+    public ResponseEntity<Response> addDriver(@RequestBody Driver driver) {
         try {
             driverService.addDriver(driver);
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (SQLException e) {
-            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/update")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public ResponseEntity<String> updateDriver(@RequestBody Driver driver) {
+    public ResponseEntity<Response> updateDriver(@RequestBody Driver driver) {
         driverService.updateDriver(driver);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{license}")
-    public ResponseEntity<String> removeDriver(@PathVariable int license) {
+    public ResponseEntity<Response> removeDriver(@PathVariable int license) {
         driverService.removeDriver(license);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{license}")

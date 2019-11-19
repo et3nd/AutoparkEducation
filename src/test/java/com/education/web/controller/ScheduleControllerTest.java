@@ -1,4 +1,4 @@
-package com.education.controller;
+package com.education.web.controller;
 
 import com.education.entity.Schedule;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,8 @@
-package com.education.controller;
+package com.education.web.controller;
 
 import com.education.entity.Schedule;
 import com.education.service.ScheduleService;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +14,35 @@ import java.sql.SQLException;
 @RequestMapping(value = "/schedule", produces = "application/json")
 public class ScheduleController {
     private final ScheduleService scheduleService;
-    private ResponseEntity<String> response = new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+    private final Response response;
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService) {
+    public ScheduleController(ScheduleService scheduleService, Response response) {
         this.scheduleService = scheduleService;
+        this.response = response;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
+    public ResponseEntity<Response> addSchedule(@RequestBody Schedule schedule) {
         try {
             scheduleService.addSchedule(schedule);
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (SQLException e) {
-            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+    public ResponseEntity<Response> updateSchedule(@RequestBody Schedule schedule) {
         scheduleService.updateSchedule(schedule);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeSchedule(@PathVariable int id) {
+    public ResponseEntity<Response> removeSchedule(@PathVariable int id) {
         scheduleService.removeSchedule(id);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -1,7 +1,8 @@
-package com.education.controller;
+package com.education.web.controller;
 
 import com.education.entity.Route;
 import com.education.service.RouteService;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +14,35 @@ import java.sql.SQLException;
 @RequestMapping(value = "/route", produces = "application/json")
 public class RouteController {
     private final RouteService routeService;
-    private ResponseEntity<String> response = new ResponseEntity<>("{ \"message\": \"Success\" }", HttpStatus.OK);
+    private final Response response;
 
     @Autowired
-    public RouteController(RouteService routeService) {
+    public RouteController(RouteService routeService, Response response) {
         this.routeService = routeService;
+        this.response = response;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addRoute(@RequestBody Route route) {
+    public ResponseEntity<Response> addRoute(@RequestBody Route route) {
         try {
             routeService.addRoute(route);
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (SQLException e) {
-            return new ResponseEntity<>("{ \"message\": \"" + e.getMessage() + "\" }", HttpStatus.BAD_REQUEST);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateRoute(@RequestBody Route route) {
+    public ResponseEntity<Response> updateRoute(@RequestBody Route route) {
         routeService.updateRoute(route);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{routeNumber}")
-    public ResponseEntity<String> removeRoute(@PathVariable int routeNumber) {
+    public ResponseEntity<Response> removeRoute(@PathVariable int routeNumber) {
         routeService.removeRoute(routeNumber);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{routeNumber}")
