@@ -14,16 +14,15 @@ import java.sql.SQLException;
 @RequestMapping(value = "/route", produces = "application/json")
 public class RouteController {
     private final RouteService routeService;
-    private final Response response;
 
     @Autowired
-    public RouteController(RouteService routeService, Response response) {
+    public RouteController(RouteService routeService) {
         this.routeService = routeService;
-        this.response = response;
     }
 
     @PostMapping("/add")
     public ResponseEntity<Response> addRoute(@RequestBody Route route) {
+        Response response = new Response();
         try {
             routeService.addRoute(route);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -35,12 +34,14 @@ public class RouteController {
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateRoute(@RequestBody Route route) {
+        Response response = new Response();
         routeService.updateRoute(route);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{routeNumber}")
     public ResponseEntity<Response> removeRoute(@PathVariable int routeNumber) {
+        Response response = new Response();
         routeService.removeRoute(routeNumber);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -15,17 +15,16 @@ import java.sql.SQLException;
 @RequestMapping(value = "/driver", produces = "application/json")
 public class DriverController {
     private final DriverService driverService;
-    private final Response response;
 
     @Autowired
-    public DriverController(DriverService driverService, Response response) {
+    public DriverController(DriverService driverService) {
         this.driverService = driverService;
-        this.response = response;
     }
 
     @PostMapping("/add")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public ResponseEntity<Response> addDriver(@RequestBody Driver driver) {
+        Response response = new Response();
         try {
             driverService.addDriver(driver);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -38,12 +37,14 @@ public class DriverController {
     @PutMapping("/update")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public ResponseEntity<Response> updateDriver(@RequestBody Driver driver) {
+        Response response = new Response();
         driverService.updateDriver(driver);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{license}")
     public ResponseEntity<Response> removeDriver(@PathVariable int license) {
+        Response response = new Response();
         driverService.removeDriver(license);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

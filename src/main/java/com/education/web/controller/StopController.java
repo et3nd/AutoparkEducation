@@ -14,16 +14,15 @@ import java.sql.SQLException;
 @RequestMapping(value = "/stop", produces = "application/json")
 public class StopController {
     private final StopService stopService;
-    private final Response response;
 
     @Autowired
-    public StopController(StopService stopService, Response response) {
+    public StopController(StopService stopService) {
         this.stopService = stopService;
-        this.response = response;
     }
 
     @PostMapping("/add")
     public ResponseEntity<Response> addStop(@RequestBody Stop stop) {
+        Response response = new Response();
         try {
             stopService.addStop(stop);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -35,12 +34,14 @@ public class StopController {
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateStop(@RequestBody Stop stop) {
+        Response response = new Response();
         stopService.updateStop(stop);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{stopName}")
     public ResponseEntity<Response> removeStop(@PathVariable String stopName) {
+        Response response = new Response();
         stopService.removeStop(stopName);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

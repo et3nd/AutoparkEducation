@@ -1,8 +1,5 @@
 package com.education.web.response;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Response {
     private String message = "Success";
 

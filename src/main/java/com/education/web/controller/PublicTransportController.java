@@ -14,16 +14,15 @@ import java.sql.SQLException;
 @RequestMapping(value = "/transport", produces = "application/json")
 public class PublicTransportController {
     private final PublicTransportService transportService;
-    private final Response response;
 
     @Autowired
-    public PublicTransportController(PublicTransportService transportService, Response response) {
+    public PublicTransportController(PublicTransportService transportService) {
         this.transportService = transportService;
-        this.response = response;
     }
 
     @PostMapping("/add")
     public ResponseEntity<Response> addPublicTransport(@RequestBody PublicTransport transport) {
+        Response response = new Response();
         try {
             transportService.addPublicTransport(transport);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -35,12 +34,14 @@ public class PublicTransportController {
 
     @PutMapping("/update")
     public ResponseEntity<Response> updatePublicTransport(@RequestBody PublicTransport transport) {
+        Response response = new Response();
         transportService.updatePublicTransport(transport);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{transportNumber}")
     public ResponseEntity<Response> removePublicTransport(@PathVariable int transportNumber) {
+        Response response = new Response();
         transportService.removePublicTransport(transportNumber);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -14,16 +14,15 @@ import java.sql.SQLException;
 @RequestMapping(value = "/schedule", produces = "application/json")
 public class ScheduleController {
     private final ScheduleService scheduleService;
-    private final Response response;
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, Response response) {
+    public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
-        this.response = response;
     }
 
     @PostMapping("/add")
     public ResponseEntity<Response> addSchedule(@RequestBody Schedule schedule) {
+        Response response = new Response();
         try {
             scheduleService.addSchedule(schedule);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -35,12 +34,14 @@ public class ScheduleController {
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateSchedule(@RequestBody Schedule schedule) {
+        Response response = new Response();
         scheduleService.updateSchedule(schedule);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> removeSchedule(@PathVariable int id) {
+        Response response = new Response();
         scheduleService.removeSchedule(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
