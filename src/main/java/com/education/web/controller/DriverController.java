@@ -2,7 +2,8 @@ package com.education.web.controller;
 
 import com.education.entity.Driver;
 import com.education.service.DriverService;
-import com.education.web.response.Response;
+import com.education.web.response.ErrorResponse;
+import com.education.web.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -23,34 +24,34 @@ public class DriverController {
 
     @PostMapping("/add")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public ResponseEntity<Response> addDriver(@RequestBody Driver driver) {
-        Response response = new Response();
+    public ResponseEntity addDriver(@RequestBody Driver driver) {
         try {
+            SuccessResponse successResponse = new SuccessResponse();
             driverService.addDriver(driver);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(successResponse);
         } catch (SQLException e) {
-            response.setMessage(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/update")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public ResponseEntity<Response> updateDriver(@RequestBody Driver driver) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> updateDriver(@RequestBody Driver driver) {
+        SuccessResponse successResponse = new SuccessResponse();
         driverService.updateDriver(driver);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{license}")
-    public ResponseEntity<Response> removeDriver(@PathVariable int license) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> removeDriver(@PathVariable int license) {
+        SuccessResponse successResponse = new SuccessResponse();
         driverService.removeDriver(license);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{license}")
     public ResponseEntity<Driver> getDriver(@PathVariable int license) {
-        return new ResponseEntity<>(driverService.getDriver(license), HttpStatus.OK);
+        return ResponseEntity.ok(driverService.getDriver(license));
     }
 }

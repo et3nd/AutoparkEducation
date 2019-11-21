@@ -2,7 +2,8 @@ package com.education.web.controller;
 
 import com.education.entity.PublicTransport;
 import com.education.service.PublicTransportService;
-import com.education.web.response.Response;
+import com.education.web.response.ErrorResponse;
+import com.education.web.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,33 +22,33 @@ public class PublicTransportController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addPublicTransport(@RequestBody PublicTransport transport) {
-        Response response = new Response();
+    public ResponseEntity addPublicTransport(@RequestBody PublicTransport transport) {
         try {
+            SuccessResponse successResponse = new SuccessResponse();
             transportService.addPublicTransport(transport);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(successResponse);
         } catch (SQLException e) {
-            response.setMessage(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updatePublicTransport(@RequestBody PublicTransport transport) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> updatePublicTransport(@RequestBody PublicTransport transport) {
+        SuccessResponse successResponse = new SuccessResponse();
         transportService.updatePublicTransport(transport);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{transportNumber}")
-    public ResponseEntity<Response> removePublicTransport(@PathVariable int transportNumber) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> removePublicTransport(@PathVariable int transportNumber) {
+        SuccessResponse successResponse = new SuccessResponse();
         transportService.removePublicTransport(transportNumber);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{transportNumber}")
     public ResponseEntity<PublicTransport> getPublicTransport(@PathVariable int transportNumber) {
-        return new ResponseEntity<>(transportService.getPublicTransport(transportNumber), HttpStatus.OK);
+        return ResponseEntity.ok(transportService.getPublicTransport(transportNumber));
     }
 }

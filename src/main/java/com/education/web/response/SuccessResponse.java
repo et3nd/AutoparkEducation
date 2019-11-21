@@ -1,6 +1,6 @@
 package com.education.web.response;
 
-public class Response {
+public class SuccessResponse {
     private String message = "Success";
 
     public String getMessage() {

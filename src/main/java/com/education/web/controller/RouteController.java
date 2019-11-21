@@ -2,7 +2,8 @@ package com.education.web.controller;
 
 import com.education.entity.Route;
 import com.education.service.RouteService;
-import com.education.web.response.Response;
+import com.education.web.response.ErrorResponse;
+import com.education.web.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,33 +22,33 @@ public class RouteController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addRoute(@RequestBody Route route) {
-        Response response = new Response();
+    public ResponseEntity addRoute(@RequestBody Route route) {
         try {
+            SuccessResponse successResponse = new SuccessResponse();
             routeService.addRoute(route);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(successResponse);
         } catch (SQLException e) {
-            response.setMessage(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updateRoute(@RequestBody Route route) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> updateRoute(@RequestBody Route route) {
+        SuccessResponse successResponse = new SuccessResponse();
         routeService.updateRoute(route);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{routeNumber}")
-    public ResponseEntity<Response> removeRoute(@PathVariable int routeNumber) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> removeRoute(@PathVariable int routeNumber) {
+        SuccessResponse successResponse = new SuccessResponse();
         routeService.removeRoute(routeNumber);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{routeNumber}")
     public ResponseEntity<Route> getRoute(@PathVariable int routeNumber) {
-        return new ResponseEntity<>(routeService.getRoute(routeNumber), HttpStatus.OK);
+        return ResponseEntity.ok(routeService.getRoute(routeNumber));
     }
 }

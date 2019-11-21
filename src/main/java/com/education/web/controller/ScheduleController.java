@@ -2,7 +2,8 @@ package com.education.web.controller;
 
 import com.education.entity.Schedule;
 import com.education.service.ScheduleService;
-import com.education.web.response.Response;
+import com.education.web.response.ErrorResponse;
+import com.education.web.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,33 +22,33 @@ public class ScheduleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addSchedule(@RequestBody Schedule schedule) {
-        Response response = new Response();
+    public ResponseEntity addSchedule(@RequestBody Schedule schedule) {
         try {
+            SuccessResponse successResponse = new SuccessResponse();
             scheduleService.addSchedule(schedule);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(successResponse);
         } catch (SQLException e) {
-            response.setMessage(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            ErrorResponse errorResponse = new ErrorResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updateSchedule(@RequestBody Schedule schedule) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> updateSchedule(@RequestBody Schedule schedule) {
+        SuccessResponse successResponse = new SuccessResponse();
         scheduleService.updateSchedule(schedule);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response> removeSchedule(@PathVariable int id) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> removeSchedule(@PathVariable int id) {
+        SuccessResponse successResponse = new SuccessResponse();
         scheduleService.removeSchedule(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Schedule> getSchedule(@PathVariable int id) {
-        return new ResponseEntity<>(scheduleService.getSchedule(id), HttpStatus.OK);
+        return ResponseEntity.ok(scheduleService.getSchedule(id));
     }
 }

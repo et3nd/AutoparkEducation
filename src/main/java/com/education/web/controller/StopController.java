@@ -2,7 +2,8 @@ package com.education.web.controller;
 
 import com.education.entity.Stop;
 import com.education.service.StopService;
-import com.education.web.response.Response;
+import com.education.web.response.ErrorResponse;
+import com.education.web.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,33 +22,33 @@ public class StopController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addStop(@RequestBody Stop stop) {
-        Response response = new Response();
+    public ResponseEntity addStop(@RequestBody Stop stop) {
         try {
+            SuccessResponse successResponse = new SuccessResponse();
             stopService.addStop(stop);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(successResponse);
         } catch (SQLException e) {
-            response.setMessage(e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            ErrorResponse errorResponse = new ErrorResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Response> updateStop(@RequestBody Stop stop) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> updateStop(@RequestBody Stop stop) {
+        SuccessResponse successResponse = new SuccessResponse();
         stopService.updateStop(stop);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{stopName}")
-    public ResponseEntity<Response> removeStop(@PathVariable String stopName) {
-        Response response = new Response();
+    public ResponseEntity<SuccessResponse> removeStop(@PathVariable String stopName) {
+        SuccessResponse successResponse = new SuccessResponse();
         stopService.removeStop(stopName);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{stopName}")
     public ResponseEntity<Stop> getStop(@PathVariable String stopName) {
-        return new ResponseEntity<>(stopService.getStop(stopName), HttpStatus.OK);
+        return ResponseEntity.ok(stopService.getStop(stopName));
     }
 }
