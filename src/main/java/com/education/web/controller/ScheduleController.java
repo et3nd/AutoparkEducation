@@ -2,8 +2,7 @@ package com.education.web.controller;
 
 import com.education.entity.Schedule;
 import com.education.service.ScheduleService;
-import com.education.web.response.ErrorResponse;
-import com.education.web.response.SuccessResponse;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,29 +21,25 @@ public class ScheduleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addSchedule(@RequestBody Schedule schedule) {
+    public ResponseEntity<Response> addSchedule(@RequestBody Schedule schedule) {
         try {
-            SuccessResponse successResponse = new SuccessResponse();
             scheduleService.addSchedule(schedule);
-            return ResponseEntity.ok(successResponse);
+            return ResponseEntity.ok(new Response("Success"));
         } catch (SQLException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response(e.getMessage()));
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<SuccessResponse> updateSchedule(@RequestBody Schedule schedule) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> updateSchedule(@RequestBody Schedule schedule) {
         scheduleService.updateSchedule(schedule);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessResponse> removeSchedule(@PathVariable int id) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> removeSchedule(@PathVariable int id) {
         scheduleService.removeSchedule(id);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @GetMapping("/{id}")

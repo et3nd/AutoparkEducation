@@ -2,8 +2,7 @@ package com.education.web.controller;
 
 import com.education.entity.Stop;
 import com.education.service.StopService;
-import com.education.web.response.ErrorResponse;
-import com.education.web.response.SuccessResponse;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,29 +21,25 @@ public class StopController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStop(@RequestBody Stop stop) {
+    public ResponseEntity<Response> addStop(@RequestBody Stop stop) {
         try {
-            SuccessResponse successResponse = new SuccessResponse();
             stopService.addStop(stop);
-            return ResponseEntity.ok(successResponse);
+            return ResponseEntity.ok(new Response("Success"));
         } catch (SQLException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response(e.getMessage()));
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<SuccessResponse> updateStop(@RequestBody Stop stop) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> updateStop(@RequestBody Stop stop) {
         stopService.updateStop(stop);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @DeleteMapping("/{stopName}")
-    public ResponseEntity<SuccessResponse> removeStop(@PathVariable String stopName) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> removeStop(@PathVariable String stopName) {
         stopService.removeStop(stopName);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @GetMapping("/{stopName}")

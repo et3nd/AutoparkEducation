@@ -2,8 +2,7 @@ package com.education.web.controller;
 
 import com.education.entity.Route;
 import com.education.service.RouteService;
-import com.education.web.response.ErrorResponse;
-import com.education.web.response.SuccessResponse;
+import com.education.web.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,29 +21,25 @@ public class RouteController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addRoute(@RequestBody Route route) {
+    public ResponseEntity<Response> addRoute(@RequestBody Route route) {
         try {
-            SuccessResponse successResponse = new SuccessResponse();
             routeService.addRoute(route);
-            return ResponseEntity.ok(successResponse);
+            return ResponseEntity.ok(new Response("Success"));
         } catch (SQLException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response(e.getMessage()));
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<SuccessResponse> updateRoute(@RequestBody Route route) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> updateRoute(@RequestBody Route route) {
         routeService.updateRoute(route);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @DeleteMapping("/{routeNumber}")
-    public ResponseEntity<SuccessResponse> removeRoute(@PathVariable int routeNumber) {
-        SuccessResponse successResponse = new SuccessResponse();
+    public ResponseEntity<Response> removeRoute(@PathVariable int routeNumber) {
         routeService.removeRoute(routeNumber);
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(new Response("Success"));
     }
 
     @GetMapping("/{routeNumber}")
