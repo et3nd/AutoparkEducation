@@ -2,16 +2,15 @@ package com.education.service;
 
 import com.education.dao.RouteDao;
 import com.education.entity.Route;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
 @Service
+@Slf4j
 public class RouteService {
-    private static final Logger log = LoggerFactory.getLogger(RouteService.class);
     private final RouteDao routeDao;
 
     @Autowired
