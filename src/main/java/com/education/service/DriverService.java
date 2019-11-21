@@ -2,8 +2,7 @@ package com.education.service;
 
 import com.education.dao.DriverDao;
 import com.education.entity.Driver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 @Service
+@Slf4j
 public class DriverService {
-    private static final Logger log = LoggerFactory.getLogger(DriverService.class);
     private final DriverDao driverDao;
 
     @Autowired

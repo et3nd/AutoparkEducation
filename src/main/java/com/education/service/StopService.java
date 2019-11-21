@@ -2,8 +2,7 @@ package com.education.service;
 
 import com.education.dao.StopDao;
 import com.education.entity.Stop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,8 @@ import java.sql.Time;
 import java.time.LocalTime;
 
 @Service
+@Slf4j
 public class StopService {
-    private static final Logger log = LoggerFactory.getLogger(StopService.class);
     private final StopDao stopDao;
 
     @Autowired

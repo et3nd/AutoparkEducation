@@ -1,8 +1,7 @@
 package com.education.dao;
 
 import com.education.entity.Route;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 
 @Repository
+@Slf4j
 public class RouteDao extends EntityDao {
     private final JdbcTemplate jdbcTemplate;
-    private static final Logger log = LoggerFactory.getLogger(RouteDao.class);
     private static final String ADD_ROUTE_SCRIPT = "/db/add-route-script.sql";
     private static final String UPDATE_ROUTE_SCRIPT = "/db/update-route-script.sql";
     private static final String REMOVE_ROUTE_SCRIPT = "/db/remove-route-script.sql";

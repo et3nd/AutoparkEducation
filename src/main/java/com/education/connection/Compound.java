@@ -1,7 +1,6 @@
 package com.education.connection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,12 +11,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+@Slf4j
 class Compound {
     private static final String SCRIPT = "/db/table-creation-script.sql";
     private static final String URL = "jdbc:h2:file:/home/alex/IdeaProjects/Education/autopark-database";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
-    private static final Logger log = LoggerFactory.getLogger(Compound.class);
 
     void initializeDataBase() {
         String initializationScript = getInitializationScript();

@@ -1,8 +1,7 @@
 package com.education.dao;
 
 import com.education.entity.Driver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 
 @Repository
+@Slf4j
 public class DriverDao extends EntityDao {
     private final JdbcTemplate jdbcTemplate;
-    private static final Logger log = LoggerFactory.getLogger(DriverDao.class);
     private static final String ADD_DRIVER_SCRIPT = "/db/add-driver-script.sql";
     private static final String UPDATE_DRIVER_SCRIPT = "/db/update-driver-script.sql";
     private static final String REMOVE_DRIVER_SCRIPT = "/db/remove-driver-script.sql";
